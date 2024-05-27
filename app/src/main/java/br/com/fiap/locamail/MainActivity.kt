@@ -13,7 +13,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import br.com.fiap.locamail.screens.Cadastro
 import br.com.fiap.locamail.screens.EntradaScreen
+import br.com.fiap.locamail.screens.Login
 import br.com.fiap.locamail.ui.theme.LocaMailTheme
 
 class MainActivity : ComponentActivity() {
@@ -28,8 +30,10 @@ class MainActivity : ComponentActivity() {
                 ) {
 
                     val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = "entrada") {
+                    NavHost(navController = navController, startDestination = "login") {
 
+                        composable(route = "login") { Login(navController) }
+                        composable(route = "cadastro") { Cadastro(navController) }
                         composable(route = "entrada") { EntradaScreen(navController, baseContext) }
 
                     }
