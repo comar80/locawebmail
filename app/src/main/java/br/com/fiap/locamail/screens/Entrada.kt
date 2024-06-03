@@ -83,7 +83,7 @@ fun EntradaScreen(navController: NavController, context: Context) {
             unselectedIcon = painterResource(id = R.drawable.enviadas),
         ),
         MenuItem(
-            title = "Favoritas",
+            title = "Importante",
             selectedIcon = painterResource(id = R.drawable.favoritar_solid),
             unselectedIcon = painterResource(id = R.drawable.favoritar_solid),
         ),
@@ -169,7 +169,8 @@ fun EntradaScreen(navController: NavController, context: Context) {
                             val titulo = listaEmail[item].titulo
                             val previa = listaEmail[item].previa
                             val foto = listaEmail[item].foto
-                            CardEmail(nome!!, horario!!, titulo!!, previa!!, foto!!)
+                            val conteudo = listaEmail[item].conteudo
+                            CardEmail(nome!!, horario!!, titulo!!, previa!!, conteudo!!, foto!!, navController)
                         }
                     }
                 }
@@ -233,9 +234,11 @@ fun EntradaScreen(navController: NavController, context: Context) {
 
 
 @Composable
-fun CardEmail(nome: String, horario: String, titulo: String, previa: String, foto: String) {
+fun CardEmail(nome: String, horario: String, titulo: String, previa: String, conteudo: String,  foto: String, navController: NavController) {
     Divider(thickness = 1.dp)
-    Row {
+    Row(modifier = Modifier.clickable {
+        navController.navigate("email/${titulo}/${nome}/${horario}/${conteudo}")
+    }) {
         Image(
             painter = rememberAsyncImagePainter(foto),
             contentDescription = "logo",

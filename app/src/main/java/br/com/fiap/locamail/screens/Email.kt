@@ -2,6 +2,8 @@ package br.com.fiap.locamail.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +13,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -31,7 +35,7 @@ import br.com.fiap.locamail.R
 import br.com.fiap.locamail.ui.theme.SfPro
 
 @Composable
-fun EmailScreen(navController: NavController) {
+fun EmailScreen(navController: NavController, onCalendarIconClick: () -> Unit, titulo: String, nome: String, horario: String, conteudo: String) {
 
     Box {
         Column(modifier = Modifier
@@ -41,7 +45,7 @@ fun EmailScreen(navController: NavController) {
             ) {
             Row(modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 10.dp, end = 20.dp, top = 10.dp),
+                .padding(start = 10.dp, end = 20.dp, top = 10.dp, bottom = 5.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Icon(
@@ -49,7 +53,8 @@ fun EmailScreen(navController: NavController) {
                     contentDescription = "voltar",
                     modifier = Modifier
                         .size(30.dp)
-                        .padding(top = 10.dp),
+                        .padding(top = 10.dp)
+                        .clickable { navController.popBackStack() },
                     tint = colorResource(id = R.color.preto_locaweb)
                 )
                 Row(modifier = Modifier
@@ -73,11 +78,14 @@ fun EmailScreen(navController: NavController) {
                         tint = colorResource(id = R.color.preto_locaweb)
                     )
                     Icon(
-                        painter = painterResource(id = R.drawable.opcoes),
-                        contentDescription = "mais opcoes",
+                        painter = painterResource(id = R.drawable.calendario),
+                        contentDescription = "calendario",
                         modifier = Modifier
                             .size(30.dp)
-                            .padding(top = 10.dp, start = 10.dp),
+                            .padding(top = 10.dp, start = 10.dp)
+                            .clickable {
+                                onCalendarIconClick()
+                            },
                         tint = colorResource(id = R.color.preto_locaweb)
                     )
                 }
@@ -88,11 +96,11 @@ fun EmailScreen(navController: NavController) {
 
             Row(modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 10.dp, end = 10.dp, top = 10.dp),
+                .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 5.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Titulo do Email",
+                    text = titulo,
                     fontSize = 30.sp,
                     fontFamily = SfPro,
                     color = colorResource(id = R.color.preto_locaweb)
@@ -111,15 +119,15 @@ fun EmailScreen(navController: NavController) {
 
             Column(modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 10.dp, end = 10.dp)
+                .padding(start = 10.dp, end = 10.dp, top = 3.dp, bottom = 3.dp)
             ) {
                 Text(
-                    text = "Nome",
+                    text = nome,
                     fontFamily = SfPro,
                     color = colorResource(id = R.color.preto_locaweb)
                 )
                 Text(
-                    text = "Horario",
+                    text = horario,
                     fontFamily = SfPro,
                     color = colorResource(id = R.color.preto_locaweb)
                 )
@@ -128,19 +136,11 @@ fun EmailScreen(navController: NavController) {
             Divider(thickness = 1.dp)
 
             Box(modifier = Modifier
-                .height(500.dp)
-                .padding(start = 10.dp, end = 10.dp)){
+                .height(450.dp)
+                .padding(start = 10.dp, end = 10.dp, top = 5.dp)
+                .verticalScroll(rememberScrollState())){
                 Text(
-                    text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-                            "Aenean sit amet ullamcorper nunc. Proin quis condimentum massa. " +
-                            "Nullam eget efficitur lectus. Nam tincidunt eros eget enim finibus, " +
-                            "eget dapibus mi sodales. Vestibulum elementum, magna vel viverra commodo, " +
-                            "dui justo commodo nisi, id placerat massa metus quis diam. Aliquam diam tellus," +
-                            " porttitor et odio vel, pretium eleifend quam. Ut sed suscipit nulla," +
-                            " at consequat libero. Ut rhoncus diam ut lectus commodo," +
-                            " vitae suscipit dolor convallis. Cras pretium elementum ultrices. " +
-                            "Mauris semper non neque quis ultricies. Vivamus ipsum nunc, lacinia vitae ex sed," +
-                            " luctus dapibus augue. Mauris tristique lorem eget est rhoncus lacinia.",
+                    text = conteudo,
                     fontFamily = SfPro,
                     color = colorResource(id = R.color.preto_locaweb)
                 )
@@ -199,5 +199,10 @@ fun EmailScreen(navController: NavController) {
 @Composable
 private fun EmailScreenPV() {
     val navController = rememberNavController()
-    EmailScreen(navController = navController)
+    val titulo = "titulo do email"
+    val nome = "Nome"
+    val horario = "Horario"
+    val conteudo = "conteudo do email"
+
+    EmailScreen(navController = navController, onCalendarIconClick = {}, titulo, nome, horario, conteudo)
 }

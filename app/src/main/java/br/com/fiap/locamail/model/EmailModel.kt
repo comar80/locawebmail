@@ -6,5 +6,6 @@ data class EmailModel(
     val horario: String? = null,
     val titulo: String? = null,
     val previa: String? = null,
+    val conteudo: String? = null,
     val foto: String? = null
 )
