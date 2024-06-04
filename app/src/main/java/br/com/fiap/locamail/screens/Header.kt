@@ -30,7 +30,7 @@ import retrofit2.http.Header
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Header(
-    onNavigationIconClick: () -> Unit
+    onNavigationIconClick: () -> Unit, nomeCaixa: String
 ) {
 
     Row(
@@ -51,7 +51,7 @@ fun Header(
             tint = colorResource(id = R.color.preto_locaweb)
         )
         Text(
-            text = "Entrada",
+            text = nomeCaixa,
             fontSize = 30.sp,
             color = colorResource(id = R.color.preto_locaweb),
             fontFamily = SfPro

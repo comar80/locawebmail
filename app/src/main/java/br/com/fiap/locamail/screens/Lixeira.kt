@@ -28,7 +28,7 @@ import androidx.compose.runtime.getValue
 import kotlinx.coroutines.launch
 
 @Composable
-fun EntradaScreen(navController: NavController, context: Context) {
+fun LixeiraScreen(navController: NavController, context: Context) {
 
     val jsonString = ReadJSONFromAssets(context, "emails.json")
     val listaEmail = Gson().fromJson(jsonString, Array<EmailModel>::class.java).asList()
@@ -38,7 +38,7 @@ fun EntradaScreen(navController: NavController, context: Context) {
     var selectedItemIndex by rememberSaveable {
         mutableStateOf(0)
     }
-    
+
     ModalNavigationDrawer(drawerContent = {
         MenuLateral(navController)
     },
@@ -56,7 +56,7 @@ fun EntradaScreen(navController: NavController, context: Context) {
                     scope.launch {
                         drawerState.open()
                     }
-                }, "Entrada")
+                }, "Lixeira")
 
                 Divider(thickness = 1.dp)
 

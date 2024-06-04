@@ -6,5 +6,6 @@ data class MenuItem(
     val title: String,
     val selectedIcon: Painter,
     val unselectedIcon: Painter,
-    val badgeCount: Int? = null
+    val badgeCount: Int? = null,
+    val path: String
 )

@@ -12,9 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import br.com.fiap.locamail.screens.ArquivoScreen
 import br.com.fiap.locamail.screens.Cadastro
 import br.com.fiap.locamail.screens.EmailScreen
 import br.com.fiap.locamail.screens.EntradaScreen
+import br.com.fiap.locamail.screens.EnviadasScreen
+import br.com.fiap.locamail.screens.ImportanteScreen
+import br.com.fiap.locamail.screens.LixeiraScreen
 import br.com.fiap.locamail.screens.Login
 import br.com.fiap.locamail.ui.theme.LocaMailTheme
 import java.text.SimpleDateFormat
@@ -66,6 +70,10 @@ class MainActivity : ComponentActivity() {
                             titulo!!, nome!!, horario!!, conteudo!!) }
 
                         composable(route = "entrada") { EntradaScreen(navController, baseContext) }
+                        composable(route = "enviadas") { EnviadasScreen(navController, baseContext) }
+                        composable(route = "importante") { ImportanteScreen(navController, baseContext) }
+                        composable(route = "arquivo") { ArquivoScreen(navController, baseContext) }
+                        composable(route = "lixeira") { LixeiraScreen(navController, baseContext) }
 
                     }
 
