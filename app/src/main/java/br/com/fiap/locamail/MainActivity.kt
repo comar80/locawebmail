@@ -17,6 +17,7 @@ import br.com.fiap.locamail.screens.Cadastro
 import br.com.fiap.locamail.screens.EmailScreen
 import br.com.fiap.locamail.screens.EntradaScreen
 import br.com.fiap.locamail.screens.EnviadasScreen
+import br.com.fiap.locamail.screens.EscreverScreen
 import br.com.fiap.locamail.screens.ImportanteScreen
 import br.com.fiap.locamail.screens.LixeiraScreen
 import br.com.fiap.locamail.screens.Login
@@ -74,6 +75,7 @@ class MainActivity : ComponentActivity() {
                         composable(route = "importante") { ImportanteScreen(navController, baseContext) }
                         composable(route = "arquivo") { ArquivoScreen(navController, baseContext) }
                         composable(route = "lixeira") { LixeiraScreen(navController, baseContext) }
+                        composable(route = "escrever") { EscreverScreen(navController) }
 
                     }
 

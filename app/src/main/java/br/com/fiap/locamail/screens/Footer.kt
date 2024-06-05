@@ -1,5 +1,6 @@
 package br.com.fiap.locamail.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,11 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import br.com.fiap.locamail.R
 import br.com.fiap.locamail.ui.theme.SfPro
 
 @Composable
-fun Footer() {
+fun Footer(navController: NavController) {
 
     val tamanhoIcone = Modifier
         .size(35.dp)
@@ -39,7 +41,7 @@ fun Footer() {
             Icon(
                 painter = painterResource(id = R.drawable.email),
                 contentDescription = "email",
-                modifier = tamanhoIconeMenor,
+                modifier = tamanhoIconeMenor.clickable { navController.navigate("entrada") },
                 tint = colorResource(id = R.color.preto_locaweb)
             )
             Text(
@@ -53,7 +55,7 @@ fun Footer() {
             Icon(
                 painter = painterResource(id = R.drawable.escrever),
                 contentDescription = "escrever",
-                modifier = tamanhoIconeMenor,
+                modifier = tamanhoIconeMenor.clickable { navController.navigate("escrever") },
                 tint = colorResource(id = R.color.preto_locaweb)
             )
             Text(

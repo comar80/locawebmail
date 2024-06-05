@@ -78,7 +78,7 @@ fun EnviadasScreen(navController: NavController, context: Context) {
 
                 Divider(thickness = 1.dp)
 
-                Footer()
+                Footer(navController)
             }
 
         }
