@@ -9,9 +9,6 @@ data class Cadastro(
     @PrimaryKey(autoGenerate = true) var id: Long = 0,
     var nome: String = "",
     var sobrenome: String = "",
-    var email: String = "",
-    var senha: String = "",
-    @ColumnInfo(name = "confirmar_senha") var confimarSenha: String = "",
-
-
+    var user: String = "",
+    var senha: String = ""
 )

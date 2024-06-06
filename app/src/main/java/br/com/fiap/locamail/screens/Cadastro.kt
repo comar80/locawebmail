@@ -12,16 +12,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,9 +43,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import br.com.fiap.locamail.MainViewModel
 import br.com.fiap.locamail.R
+import br.com.fiap.locamail.RegistrationFormEvent
 import br.com.fiap.locamail.database.repository.CadastroRepository
 import br.com.fiap.locamail.model.Cadastro
 import br.com.fiap.locamail.ui.theme.SfPro
@@ -52,11 +59,13 @@ fun Cadastro(navController: NavController) {
 
     var nomeState by remember { mutableStateOf("") }
     var sobrenomeState by remember { mutableStateOf("") }
-    var emailState by remember { mutableStateOf("") }
+    var userState by remember { mutableStateOf("") }
     var senhaState by remember { mutableStateOf("") }
     var confirmaSenhaState by remember { mutableStateOf("") }
 
     // Obter contexto
+    val viewModel = viewModel<MainViewModel>()
+    val state = viewModel.state
     val context = LocalContext.current
     val cadastroRepository = CadastroRepository(context)
 
@@ -64,7 +73,8 @@ fun Cadastro(navController: NavController) {
         modifier = Modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.preto_locaweb))
-            .padding(start = 32.dp, end = 32.dp),
+            .padding(start = 32.dp, end = 32.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -95,7 +105,11 @@ fun Cadastro(navController: NavController) {
         Spacer(modifier = Modifier.height(30.dp))
         OutlinedTextField(
             value = nomeState,
-            onValueChange = { nomeState = it },
+            onValueChange = {
+                viewModel.onEvent(RegistrationFormEvent.NomeChanged(it))
+                nomeState = it
+            },
+            isError = state.nomeError != null,
             label = { Text(
                 text = "Nome",
                 fontFamily = SfPro,
@@ -105,29 +119,60 @@ fun Cadastro(navController: NavController) {
             colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
+        if (state.nomeError != null) {
+            Text(
+                text = state.nomeError,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.align(Alignment.End)
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = sobrenomeState,
-            onValueChange = { sobrenomeState = it },
+            onValueChange = {
+                viewModel.onEvent(RegistrationFormEvent.SobrenomeChanged(it))
+                sobrenomeState = it },
+            isError = state.sobrenomeError != null,
             label = { Text(text = "Sobrenome", fontFamily = SfPro, fontWeight = FontWeight.Bold) },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
+        if (state.sobrenomeError != null) {
+            Text(
+                text = state.sobrenomeError,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.align(Alignment.End)
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
-            value = emailState,
-            onValueChange = { emailState = it },
-            label = { Text(text = "Email",fontFamily = SfPro, fontWeight = FontWeight.Bold
+            value = userState,
+            onValueChange = {
+                viewModel.onEvent(RegistrationFormEvent.UserChanged(it))
+                userState = it },
+            isError = state.userError != null,
+            label = { Text(text = "Nome de Usuário",fontFamily = SfPro, fontWeight = FontWeight.Bold
             ) },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
+        if (state.userError != null) {
+            Text(
+                text = state.userError,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.align(Alignment.End)
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
-            value = senhaState,
-            onValueChange = { senhaState = it},
+            value = state.password,
+            onValueChange = {
+                viewModel.onEvent(RegistrationFormEvent.PasswordChanged(it))
+                senhaState = it
+            },
+            isError = state.passwordError != null,
             label = { Text(text = "Senha", fontFamily = SfPro, fontWeight = FontWeight.Bold) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
@@ -135,10 +180,21 @@ fun Cadastro(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White)
         )
+        if (state.passwordError != null) {
+            Text(
+                text = state.passwordError,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.align(Alignment.End)
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
-            value = confirmaSenhaState,
-            onValueChange = { confirmaSenhaState = it},
+            value = state.repeatedPassword,
+            onValueChange = {
+                viewModel.onEvent(RegistrationFormEvent.RepeatedPasswordChanged(it))
+                confirmaSenhaState = it
+            },
+            isError = state.repeatedPasswordError != null,
             label = { Text(text = "Confirmar Senha", fontFamily = SfPro, fontWeight = FontWeight.Bold) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
@@ -146,20 +202,17 @@ fun Cadastro(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White)
         )
+        if (state.repeatedPasswordError != null) {
+            Text(
+                text = state.repeatedPasswordError,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.align(Alignment.End)
+            )
+        }
         Spacer(modifier = Modifier.height(30.dp))
         Button(
             onClick = {
-                val cadastro = Cadastro(
-                    id = 0,
-                    nome = nomeState,
-                    sobrenome = sobrenomeState,
-                    email = emailState,
-                    senha = senhaState,
-                    confimarSenha = confirmaSenhaState
-                )
-                cadastroRepository.salvar(cadastro)
-
-                navController.navigate("login")
+                viewModel.onEvent(RegistrationFormEvent.Submit)
             },
             colors = ButtonDefaults.buttonColors(Color.White),
             shape = RoundedCornerShape(6.dp),
@@ -168,7 +221,29 @@ fun Cadastro(navController: NavController) {
             Text(text = "Criar Login", fontFamily = SfPro, fontSize = 20.sp, color = colorResource(id = R.color.preto_locaweb))
         }
     }
+
+    LaunchedEffect(key1 = context) {
+        viewModel.validationEvents.collect { event ->
+            when (event) {
+                is MainViewModel.ValidationEvent.Success -> {
+
+                    val cadastro = Cadastro(
+                        id = 0,
+                        nome = nomeState,
+                        sobrenome = sobrenomeState,
+                        user = userState,
+                        senha = senhaState
+                    )
+
+                    cadastroRepository.salvar(cadastro)
+
+                    navController.navigate("login")
+                }
+            }
+        }
+    }
 }
+
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
