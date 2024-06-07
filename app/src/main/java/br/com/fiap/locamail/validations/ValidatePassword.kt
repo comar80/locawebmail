@@ -3,6 +3,12 @@ package br.com.fiap.locamail.validations
 class ValidatePassword {
 
     fun execute(password: String): ValidationResult {
+        if(password.isBlank()) {
+            return ValidationResult(
+                successful = false,
+                errorMessage = "Campo em branco. Preencha com sua senha"
+            )
+        }
         if(password.length < 8) {
             return ValidationResult(
                 successful = false,

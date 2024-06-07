@@ -6,7 +6,7 @@ class ValidateUser {
         if(user.isBlank()) {
             return ValidationResult(
                 successful = false,
-                errorMessage = "Escolha um nome de usuário"
+                errorMessage = "Preencha com o nome de usuário"
             )
         }
         return ValidationResult(

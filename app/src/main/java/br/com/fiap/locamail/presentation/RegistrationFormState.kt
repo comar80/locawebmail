@@ -1,4 +1,4 @@
-package br.com.fiap.locamail
+package br.com.fiap.locamail.presentation
 
 data class RegistrationFormState(
     val nome: String = "",

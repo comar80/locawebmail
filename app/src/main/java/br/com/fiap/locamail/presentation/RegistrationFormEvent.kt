@@ -1,4 +1,4 @@
-package br.com.fiap.locamail
+package br.com.fiap.locamail.presentation
 
 sealed class RegistrationFormEvent {
     data class NomeChanged(val nome: String) : RegistrationFormEvent()

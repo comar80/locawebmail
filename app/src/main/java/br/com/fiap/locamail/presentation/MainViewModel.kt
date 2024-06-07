@@ -1,4 +1,4 @@
-package br.com.fiap.locamail
+package br.com.fiap.locamail.presentation
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,7 +27,7 @@ class MainViewModel(
     private val validationEventChannel = Channel<ValidationEvent>()
     val validationEvents = validationEventChannel.receiveAsFlow()
 
-    fun onEvent(event: RegistrationFormEvent) {
+    fun onRegisterEvent(event: RegistrationFormEvent) {
         when(event) {
             is RegistrationFormEvent.NomeChanged -> {
                 state = state.copy(nome = event.nome)
@@ -45,12 +45,12 @@ class MainViewModel(
                 state = state.copy(repeatedPassword = event.repeatedPassword)
             }
             is RegistrationFormEvent.Submit -> {
-                submitData()
+                submitRegisterData()
             }
         }
     }
 
-    private fun submitData() {
+    private fun submitRegisterData() {
         val nomeResult = validateNome.execute(state.nome)
         val sobrenomeResult = validateSobrenome.execute(state.sobrenome)
         val userResult = validateUser.execute(state.user)
@@ -71,6 +71,42 @@ class MainViewModel(
             userError = userResult.errorMessage,
             passwordError = passwordResult.errorMessage,
             repeatedPasswordError = repeatedPasswordResult.errorMessage
+        )
+        if(hasError) {
+            return
+        }
+
+        viewModelScope.launch {
+            validationEventChannel.send(ValidationEvent.Success)
+        }
+    }
+
+    fun onLoginEvent(event: LoginFormEvent) {
+        when(event) {
+            is LoginFormEvent.UserChanged -> {
+                state = state.copy(user = event.user)
+            }
+            is LoginFormEvent.PasswordChanged -> {
+                state = state.copy(password = event.password)
+            }
+            is LoginFormEvent.Submit -> {
+                submitLoginData()
+            }
+        }
+    }
+
+    private fun submitLoginData() {
+        val userResult = validateUser.execute(state.user)
+        val passwordResult = validatePassword.execute(state.password)
+
+        val hasError = listOf(
+            userResult,
+            passwordResult
+        ).any { !it.successful }
+
+        state = state.copy(
+            userError = userResult.errorMessage,
+            passwordError = passwordResult.errorMessage
         )
         if(hasError) {
             return
