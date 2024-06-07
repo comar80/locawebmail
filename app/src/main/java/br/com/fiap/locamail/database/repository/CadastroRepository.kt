@@ -11,4 +11,8 @@ class CadastroRepository(context: Context) {
     fun salvar(cadastro: Cadastro): Long{
         return db.salvar(cadastro = cadastro)
     }
+
+    fun buscarUsuario(user: String): Cadastro {
+        return db.buscarUsuario(user)
+    }
 }

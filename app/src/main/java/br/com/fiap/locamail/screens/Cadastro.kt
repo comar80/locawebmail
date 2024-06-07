@@ -46,9 +46,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import br.com.fiap.locamail.MainViewModel
+import br.com.fiap.locamail.presentation.MainViewModel
 import br.com.fiap.locamail.R
-import br.com.fiap.locamail.RegistrationFormEvent
+import br.com.fiap.locamail.presentation.RegistrationFormEvent
 import br.com.fiap.locamail.database.repository.CadastroRepository
 import br.com.fiap.locamail.model.Cadastro
 import br.com.fiap.locamail.ui.theme.SfPro
@@ -104,9 +104,9 @@ fun Cadastro(navController: NavController) {
 
         Spacer(modifier = Modifier.height(30.dp))
         OutlinedTextField(
-            value = nomeState,
+            value = state.nome,
             onValueChange = {
-                viewModel.onEvent(RegistrationFormEvent.NomeChanged(it))
+                viewModel.onRegisterEvent(RegistrationFormEvent.NomeChanged(it))
                 nomeState = it
             },
             isError = state.nomeError != null,
@@ -128,9 +128,9 @@ fun Cadastro(navController: NavController) {
         }
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
-            value = sobrenomeState,
+            value = state.sobrenome,
             onValueChange = {
-                viewModel.onEvent(RegistrationFormEvent.SobrenomeChanged(it))
+                viewModel.onRegisterEvent(RegistrationFormEvent.SobrenomeChanged(it))
                 sobrenomeState = it },
             isError = state.sobrenomeError != null,
             label = { Text(text = "Sobrenome", fontFamily = SfPro, fontWeight = FontWeight.Bold) },
@@ -147,9 +147,9 @@ fun Cadastro(navController: NavController) {
         }
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
-            value = userState,
+            value = state.user,
             onValueChange = {
-                viewModel.onEvent(RegistrationFormEvent.UserChanged(it))
+                viewModel.onRegisterEvent(RegistrationFormEvent.UserChanged(it))
                 userState = it },
             isError = state.userError != null,
             label = { Text(text = "Nome de Usuário",fontFamily = SfPro, fontWeight = FontWeight.Bold
@@ -169,7 +169,7 @@ fun Cadastro(navController: NavController) {
         OutlinedTextField(
             value = state.password,
             onValueChange = {
-                viewModel.onEvent(RegistrationFormEvent.PasswordChanged(it))
+                viewModel.onRegisterEvent(RegistrationFormEvent.PasswordChanged(it))
                 senhaState = it
             },
             isError = state.passwordError != null,
@@ -191,7 +191,7 @@ fun Cadastro(navController: NavController) {
         OutlinedTextField(
             value = state.repeatedPassword,
             onValueChange = {
-                viewModel.onEvent(RegistrationFormEvent.RepeatedPasswordChanged(it))
+                viewModel.onRegisterEvent(RegistrationFormEvent.RepeatedPasswordChanged(it))
                 confirmaSenhaState = it
             },
             isError = state.repeatedPasswordError != null,
@@ -212,7 +212,7 @@ fun Cadastro(navController: NavController) {
         Spacer(modifier = Modifier.height(30.dp))
         Button(
             onClick = {
-                viewModel.onEvent(RegistrationFormEvent.Submit)
+                viewModel.onRegisterEvent(RegistrationFormEvent.Submit)
             },
             colors = ButtonDefaults.buttonColors(Color.White),
             shape = RoundedCornerShape(6.dp),
