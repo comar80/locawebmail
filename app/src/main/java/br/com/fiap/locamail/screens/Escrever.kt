@@ -37,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -46,6 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.locamail.R
@@ -223,7 +225,8 @@ fun EscreverScreen(navController: NavController) {
                             .size(30.dp)
                             .padding(top = 10.dp, start = 10.dp)
                             .clickable {
-                                launcher.launch(arrayOf("*/*")) },
+                                launcher.launch(arrayOf("*/*"))
+                            },
                         tint = colorResource(id = R.color.preto_locaweb)
                     )
                     OutlinedButton(
@@ -247,14 +250,52 @@ fun EscreverScreen(navController: NavController) {
 
                 }
 
-                result.value?.let { anexo ->
-                    val nomeAnexo = getFileNameFromUri(anexo, context)
-                    val tamanhoAnexo = getSizeFromUri(anexo, context)
-                    Text(text = "Anexo: $nomeAnexo - $tamanhoAnexo bytes")
+                Column(modifier = Modifier
+                    .fillMaxSize()) {
+                    result.value?.let { anexo ->
+                        val nomeAnexo = getFileNameFromUri(anexo, context)
+                        val tamanhoAnexo = getSizeFromUri(anexo, context)
+                        AnexoCard(nomeAnexo, tamanhoAnexo)
+                    }
                 }
             }
         }
     }
+}
+
+@Composable
+fun AnexoCard(nomeAnexo: String, tamanhoAnexo: String) {
+
+    Row(modifier = Modifier
+        .fillMaxSize()
+        .padding(top = 10.dp, bottom = 10.dp),
+        verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+            painter = painterResource(id = R.drawable.anexo),
+            contentDescription = "anexo",
+            modifier = Modifier
+                .size(35.dp)
+                .padding(start = 10.dp, end = 10.dp),
+            tint = colorResource(id = R.color.preto_locaweb)
+        )
+
+        Text(text = "$nomeAnexo - $tamanhoAnexo bytes",
+            fontFamily = SfPro,
+            fontSize = 16.sp)
+
+        Icon(
+            painter = painterResource(id = R.drawable.remover),
+            contentDescription = "anexo",
+            modifier = Modifier
+                .size(20.dp)
+                .padding(start = 10.dp)
+                .clickable {
+
+                },
+            tint = colorResource(id = R.color.preto_locaweb)
+        )
+    }
+
 }
 
 fun getFileNameFromUri(uri: Uri, context: Context): String {
