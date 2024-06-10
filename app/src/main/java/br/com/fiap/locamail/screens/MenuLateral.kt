@@ -62,6 +62,12 @@ fun MenuLateral(navController: NavController) {
             unselectedIcon = painterResource(id = R.drawable.lixo),
             path = "lixeira"
         ),
+        MenuItem(
+            title = "Sair",
+            selectedIcon = painterResource(id = R.drawable.sair),
+            unselectedIcon = painterResource(id = R.drawable.sair),
+            path = "login"
+        ),
     )
 
     var selectedItemIndex by rememberSaveable {
