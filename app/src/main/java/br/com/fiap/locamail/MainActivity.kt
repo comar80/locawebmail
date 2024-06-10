@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
                 ) {
 
                     val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = "login") {
+                    NavHost(navController = navController, startDestination = "escrever") {
 
                         composable(route = "login") { Login(navController) }
 
@@ -50,22 +50,9 @@ class MainActivity : ComponentActivity() {
 
                             EmailScreen(navController,
                             onCalendarIconClick = {
-                            val startTime = "2022-02-1T09:00:00"
-                            val endTime = "2022-02-1T12:00:00"
-
-                            val mSimpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-                            val mStartTime = mSimpleDateFormat.parse(startTime)
-                            val mEndTime = mSimpleDateFormat.parse(endTime)
-
                             val mIntent = Intent(Intent.ACTION_EDIT)
                             mIntent.type = "vnd.android.cursor.item/event"
                             mIntent.putExtra("title", titulo)
-                            /*
-                            mIntent.putExtra("beginTime", mStartTime.time)
-                            mIntent.putExtra("time", true)
-                            mIntent.putExtra("rule", "FREQ=YEARLY")
-                            mIntent.putExtra("endTime", mEndTime.time)
-                            */
                             startActivity(mIntent)
                         },
                             titulo!!, nome!!, horario!!, conteudo!!) }
