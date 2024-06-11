@@ -67,6 +67,7 @@ fun EscreverScreen(navController: NavController) {
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
         result.value = it
     }
+    val listaAnexo = remember { mutableListOf<Uri?>() }
     val context = LocalContext.current
 
     Box() {
@@ -250,12 +251,17 @@ fun EscreverScreen(navController: NavController) {
 
                 }
 
+
                 Column(modifier = Modifier
                     .fillMaxSize()) {
                     result.value?.let { anexo ->
-                        val nomeAnexo = getFileNameFromUri(anexo, context)
-                        val tamanhoAnexo = getSizeFromUri(anexo, context)
-                        AnexoCard(nomeAnexo, tamanhoAnexo)
+                        listaAnexo.add(result.value)
+                        for(item in listaAnexo){
+                            val nomeAnexo = getFileNameFromUri(item!!, context)
+                            val tamanhoAnexo = getSizeFromUri(item, context)
+                            AnexoCard(nomeAnexo, tamanhoAnexo)
+                        }
+                        println("lista anexo: $listaAnexo")
                     }
                 }
             }
@@ -268,7 +274,7 @@ fun AnexoCard(nomeAnexo: String, tamanhoAnexo: String) {
 
     Row(modifier = Modifier
         .fillMaxSize()
-        .padding(top = 10.dp, bottom = 10.dp),
+        .padding(top = 5.dp, bottom = 5.dp),
         verticalAlignment = Alignment.CenterVertically) {
         Icon(
             painter = painterResource(id = R.drawable.anexo),
