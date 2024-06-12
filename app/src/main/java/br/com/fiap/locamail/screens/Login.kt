@@ -49,7 +49,10 @@ import br.com.fiap.locamail.presentation.LoginFormEvent
 import br.com.fiap.locamail.presentation.MainViewModel
 import br.com.fiap.locamail.R
 import br.com.fiap.locamail.database.repository.CadastroRepository
+import br.com.fiap.locamail.database.repository.EmailRepository
+import br.com.fiap.locamail.model.Email
 import br.com.fiap.locamail.ui.theme.SfPro
+import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,6 +65,7 @@ fun Login(navController: NavController) {
     val state = viewModel.state
     val context = LocalContext.current
     val cadastroRepository = CadastroRepository(context)
+    val emailRepository = EmailRepository(context)
 
     Column(
         modifier = Modifier
