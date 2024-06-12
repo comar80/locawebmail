@@ -1,0 +1,31 @@
+// Mock de emails:
+                    val destinatario1 = ArrayList<String>()
+                    destinatario1.add("destinatario1@mail.com")
+
+                    val email1 = Email(
+                        emailId = 0,
+                        caixaEmailId = 1,
+                        remetente = "remetente@mail.com",
+                        destinatario = destinatario1,
+                        horario = LocalDateTime.now(),
+                        titulo = "titulo do email",
+                        conteudo = "conteudo da mensagem do email",
+                        fotoRemetente = "https://i.ibb.co/8dXv21g/locaweb.png"
+                    )
+                    emailRepository.salvar(email1)
+
+                    val destinatario2 = ArrayList<String>()
+                    destinatario2.add("destinatario2@mail.com")
+                    destinatario2.add("destinatario3@mail.com")
+
+                    val email2 = Email(
+                        emailId = 0,
+                        caixaEmailId = 2,
+                        remetente = "remetente2@mail.com",
+                        destinatario = destinatario2,
+                        horario = LocalDateTime.now(),
+                        titulo = "titulo do email saida",
+                        conteudo = "conteudo da mensagem do email saida",
+                        fotoRemetente = "https://i.ibb.co/8dXv21g/locaweb.png"
+                    )
+                    emailRepository.salvar(email2)

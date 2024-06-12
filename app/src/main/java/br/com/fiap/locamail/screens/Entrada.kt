@@ -25,13 +25,25 @@ import br.com.fiap.locamail.utils.ReadJSONFromAssets
 import com.google.gson.Gson
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
+import br.com.fiap.locamail.database.repository.CadastroRepository
+import br.com.fiap.locamail.database.repository.EmailRepository
+import br.com.fiap.locamail.model.CaixaComEmails
 import kotlinx.coroutines.launch
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun EntradaScreen(navController: NavController, context: Context) {
 
+    /*
+    Lendo do mock Json
     val jsonString = ReadJSONFromAssets(context, "emails.json")
     val listaEmail = Gson().fromJson(jsonString, Array<EmailModel>::class.java).asList()
+     */
+
+    val emailRepository = EmailRepository(context)
+    val emailsEntrada = emailRepository.getUmaCaixaComEmails(1)
+    val listaEmails = emailsEntrada.emails
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -64,14 +76,17 @@ fun EntradaScreen(navController: NavController, context: Context) {
 
                 Box(modifier = Modifier.height(500.dp)) {
                     LazyColumn {
-                        items(listaEmail.size) { item ->
-                            val nome = listaEmail[item].nome
-                            val horario = listaEmail[item].horario
-                            val titulo = listaEmail[item].titulo
-                            val previa = listaEmail[item].previa
-                            val foto = listaEmail[item].foto
-                            val conteudo = listaEmail[item].conteudo
-                            CardEmail(nome!!, horario!!, titulo!!, previa!!, conteudo!!, foto!!, navController)
+                        items(listaEmails.size) { item ->
+                            val nome = listaEmails[item].remetente
+
+                            val horarioCompleto = listaEmails[item].horario
+                            val horario = horarioCompleto?.format(DateTimeFormatter.ofPattern("dd-MM-yyyy - HH:mm"))
+
+                            val titulo = listaEmails[item].titulo
+                            val previa = listaEmails[item].conteudo
+                            val foto = listaEmails[item].fotoRemetente
+                            val conteudo = listaEmails[item].conteudo
+                            CardEmail(nome, horario!!, titulo, previa, conteudo, foto!!, navController)
                         }
                     }
                 }
