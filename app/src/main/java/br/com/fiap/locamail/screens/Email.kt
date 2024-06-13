@@ -151,7 +151,9 @@ fun EmailScreen(navController: NavController, onCalendarIconClick: () -> Unit, t
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 OutlinedButton(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        navController.navigate("responder/${titulo}/${nome}/${conteudo}")
+                    },
                     shape = RoundedCornerShape(5.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.White,
@@ -169,7 +171,9 @@ fun EmailScreen(navController: NavController, onCalendarIconClick: () -> Unit, t
                     Text(text = "Responder", fontFamily = SfPro)
                 }
                 OutlinedButton(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        navController.navigate("encaminhar/${titulo}/${conteudo}")
+                    },
                     shape = RoundedCornerShape(5.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.White,

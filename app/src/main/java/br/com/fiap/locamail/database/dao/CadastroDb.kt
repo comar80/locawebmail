@@ -11,12 +11,13 @@ import br.com.fiap.locamail.model.CaixaComEmails
 import br.com.fiap.locamail.model.CaixaEmail
 import br.com.fiap.locamail.model.Email
 
-@Database(entities = [Cadastro::class, Email::class, CaixaEmail::class], version = 6)
+@Database(entities = [Cadastro::class, Email::class, CaixaEmail::class], version = 7)
 @TypeConverters(Converters::class)
 abstract class CadastroDb: RoomDatabase() {
 
         abstract fun cadastroDao(): CadastroDao
         abstract fun emailDao(): EmailDao
+        abstract fun caixaDao(): CaixaDao
 
         companion object{
 

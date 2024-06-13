@@ -1,8 +1,7 @@
 package br.com.fiap.locamail.screens
 
-import android.content.Context
+
 import android.net.Uri
-import android.provider.OpenableColumns
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,7 +22,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,7 +36,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -48,7 +45,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.locamail.R
@@ -61,13 +57,13 @@ import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EscreverScreen(navController: NavController) {
+fun EncaminharScreen(navController: NavController, titulo: String, conteudo: String) {
 
     var destinatarioState by remember { mutableStateOf("") }
     var ccState by remember { mutableStateOf("") }
     var ccoState by remember { mutableStateOf("") }
-    var tituloState by remember { mutableStateOf("") }
-    var conteudoState by remember { mutableStateOf("") }
+    var tituloState by remember { mutableStateOf(titulo) }
+    var conteudoState by remember { mutableStateOf(conteudo) }
 
     val result = remember { mutableStateOf<Uri?>(null) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
@@ -143,25 +139,25 @@ fun EscreverScreen(navController: NavController) {
                             containerColor = Color.White,
                         ),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                        )
-                        TextField(
-                            value = destinatarioState,
-                            onValueChange = { destinatarioState = it },
-                            label = { Text(
-                                text = "Para",
-                                fontFamily = SfPro,
-                                fontWeight = FontWeight.Bold,
-                            ) },
-                            singleLine = true,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 10.dp, end = 10.dp),
-                            colors = TextFieldDefaults.outlinedTextFieldColors(
-                                containerColor = Color.White,
-                            ),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                    )
+                    TextField(
+                        value = destinatarioState,
+                        onValueChange = { destinatarioState = it },
+                        label = { Text(
+                            text = "Para",
+                            fontFamily = SfPro,
+                            fontWeight = FontWeight.Bold,
+                        ) },
+                        singleLine = true,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 10.dp, end = 10.dp),
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            containerColor = Color.White,
+                        ),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
 
-                            )
+                        )
                     Row(modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 5.dp)
@@ -202,24 +198,24 @@ fun EscreverScreen(navController: NavController) {
                             )
                     }
                 }
-                    OutlinedTextField(
-                        value = conteudoState,
-                        onValueChange = { conteudoState = it },
-                        label = { Text(
-                            text = "",
-                            fontFamily = SfPro,
-                            fontWeight = FontWeight.Bold,
-                        ) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(350.dp)
-                            .padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            containerColor = Color.White,
-                        ),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                OutlinedTextField(
+                    value = conteudoState,
+                    onValueChange = { conteudoState = it },
+                    label = { Text(
+                        text = "",
+                        fontFamily = SfPro,
+                        fontWeight = FontWeight.Bold,
+                    ) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(350.dp)
+                        .padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        containerColor = Color.White,
+                    ),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
 
-                        )
+                    )
 
                 Row(modifier = Modifier
                     .fillMaxWidth()
@@ -254,7 +250,7 @@ fun EscreverScreen(navController: NavController) {
                             val email = Email(
                                 emailId = 0,
                                 caixaEmailId = 2,
-                                remetente = "remetente@mail.com",
+                                remetente = destinatarioState,
                                 destinatario = destinatario,
                                 destCopia = destCopia,
                                 destOculto = destOculto,
@@ -304,14 +300,4 @@ fun EscreverScreen(navController: NavController) {
             }
         }
     }
-}
-
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-private fun EmailScreenPV() {
-    val navController = rememberNavController()
-    fun onAttatchmentClick() {
-
-    }
-    EscreverScreen(navController = navController)
 }
