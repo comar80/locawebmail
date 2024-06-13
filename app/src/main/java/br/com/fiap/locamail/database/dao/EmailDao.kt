@@ -13,11 +13,6 @@ interface EmailDao {
     @Insert
     fun salvar(email: Email): Long
 
-    @Transaction
-    @Query("SELECT * FROM tbl_caixa")
-    fun getCaixaComEmails(): List<CaixaComEmails>
-
-    @Transaction
-    @Query("SELECT * FROM tbl_caixa WHERE caixaId = :caixaId")
-    fun getUmaCaixaComEmails(caixaId: Long): CaixaComEmails
+    @Query("UPDATE tbl_email SET caixaEmailId = :caixaEmailId WHERE emailId = :emailId")
+    fun moverEmail(caixaEmailId: Long, emailId: Long): Long
 }

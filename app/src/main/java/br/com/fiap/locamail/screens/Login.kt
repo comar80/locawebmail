@@ -1,5 +1,7 @@
 package br.com.fiap.locamail.screens
 
+import android.database.sqlite.SQLiteConstraintException
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -49,7 +51,9 @@ import br.com.fiap.locamail.presentation.LoginFormEvent
 import br.com.fiap.locamail.presentation.MainViewModel
 import br.com.fiap.locamail.R
 import br.com.fiap.locamail.database.repository.CadastroRepository
+import br.com.fiap.locamail.database.repository.CaixaRepository
 import br.com.fiap.locamail.database.repository.EmailRepository
+import br.com.fiap.locamail.model.CaixaEmail
 import br.com.fiap.locamail.model.Email
 import br.com.fiap.locamail.ui.theme.SfPro
 import java.time.LocalDateTime
@@ -65,7 +69,42 @@ fun Login(navController: NavController) {
     val state = viewModel.state
     val context = LocalContext.current
     val cadastroRepository = CadastroRepository(context)
-    val emailRepository = EmailRepository(context)
+    val caixaRepository = CaixaRepository(context)
+
+    try {
+        val entrada = CaixaEmail(
+            caixaId = 1,
+            nomeCaixa = "entrada"
+        )
+        caixaRepository.salvar(entrada)
+
+        val saida = CaixaEmail(
+            caixaId = 2,
+            nomeCaixa = "saida"
+        )
+        caixaRepository.salvar(saida)
+
+        val arquivo = CaixaEmail(
+            caixaId = 3,
+            nomeCaixa = "arquivo"
+        )
+        caixaRepository.salvar(arquivo)
+
+        val lixeira = CaixaEmail(
+            caixaId = 4,
+            nomeCaixa = "lixeira"
+        )
+        caixaRepository.salvar(lixeira)
+
+        val importante = CaixaEmail(
+            caixaId = 5,
+            nomeCaixa = "importante"
+        )
+        caixaRepository.salvar(importante)
+
+    } catch (e: SQLiteConstraintException) {
+        Log.d("erro", "Tabelas de caixas já criadas")
+    }
 
     Column(
         modifier = Modifier

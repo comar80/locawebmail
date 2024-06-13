@@ -15,12 +15,14 @@ import androidx.navigation.compose.rememberNavController
 import br.com.fiap.locamail.screens.ArquivoScreen
 import br.com.fiap.locamail.screens.Cadastro
 import br.com.fiap.locamail.screens.EmailScreen
+import br.com.fiap.locamail.screens.EncaminharScreen
 import br.com.fiap.locamail.screens.EntradaScreen
 import br.com.fiap.locamail.screens.EnviadasScreen
 import br.com.fiap.locamail.screens.EscreverScreen
 import br.com.fiap.locamail.screens.ImportanteScreen
 import br.com.fiap.locamail.screens.LixeiraScreen
 import br.com.fiap.locamail.screens.Login
+import br.com.fiap.locamail.screens.ResponderScreen
 import br.com.fiap.locamail.ui.theme.LocaMailTheme
 import java.text.SimpleDateFormat
 
@@ -36,7 +38,7 @@ class MainActivity : ComponentActivity() {
                 ) {
 
                     val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = "entrada") {
+                    NavHost(navController = navController, startDestination = "login") {
 
                         composable(route = "login") { Login(navController) }
 
@@ -63,6 +65,21 @@ class MainActivity : ComponentActivity() {
                         composable(route = "arquivo") { ArquivoScreen(navController, baseContext) }
                         composable(route = "lixeira") { LixeiraScreen(navController, baseContext) }
                         composable(route = "escrever") { EscreverScreen(navController) }
+
+                        composable(route = "responder/{titulo}/{nome}/{conteudo}") {
+                            val titulo = it.arguments?.getString("titulo")
+                            val nome = it.arguments?.getString("nome")
+                            val conteudo = it.arguments?.getString("conteudo")
+
+                            ResponderScreen(navController, titulo!!, nome!!, conteudo!!)
+                        }
+
+                        composable(route = "encaminhar/{titulo}/{conteudo}") {
+                            val titulo = it.arguments?.getString("titulo")
+                            val conteudo = it.arguments?.getString("conteudo")
+
+                            EncaminharScreen(navController, titulo!!, conteudo!!)
+                        }
 
                     }
 

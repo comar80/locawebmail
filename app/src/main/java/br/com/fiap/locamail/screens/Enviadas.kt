@@ -1,6 +1,7 @@
 package br.com.fiap.locamail.screens
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +27,7 @@ import br.com.fiap.locamail.utils.ReadJSONFromAssets
 import com.google.gson.Gson
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import br.com.fiap.locamail.database.repository.CaixaRepository
 import br.com.fiap.locamail.database.repository.EmailRepository
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
@@ -32,10 +35,8 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun EnviadasScreen(navController: NavController, context: Context) {
 
-    val emailRepository = EmailRepository(context)
-    val emailsEntrada = emailRepository.getUmaCaixaComEmails(2)
-    val listaEmails = emailsEntrada.emails
 
+    val caixaRepository = CaixaRepository(context)
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedItemIndex by rememberSaveable {
@@ -67,17 +68,26 @@ fun EnviadasScreen(navController: NavController, context: Context) {
 
                 Box(modifier = Modifier.height(500.dp)) {
                     LazyColumn {
-                        items(listaEmails.size) { item ->
-                            val nome = listaEmails[item].remetente
+                        try {
+                            val emailsEntrada = caixaRepository.getUmaCaixaComEmails(2)
+                            val listaEmails = emailsEntrada.emails
 
-                            val horarioCompleto = listaEmails[item].horario
-                            val horario = horarioCompleto?.format(DateTimeFormatter.ofPattern("dd-MM-yyyy - HH:mm"))
+                            items(listaEmails.size) { item ->
+                                val nome = listaEmails[item].destinatario
+                                val nomeString = nome.toString().removePrefix("[").removeSuffix("]")
 
-                            val titulo = listaEmails[item].titulo
-                            val previa = listaEmails[item].conteudo
-                            val foto = listaEmails[item].fotoRemetente
-                            val conteudo = listaEmails[item].conteudo
-                            CardEmail(nome, horario!!, titulo, previa, conteudo, foto!!, navController)
+                                val horarioCompleto = listaEmails[item].horario
+                                val horario = horarioCompleto.format(DateTimeFormatter.ofPattern("dd-MM-yyyy - HH:mm"))
+
+                                val titulo = listaEmails[item].titulo
+                                val previa = listaEmails[item].conteudo
+                                val foto = listaEmails[item].fotoRemetente
+                                val conteudo = listaEmails[item].conteudo
+                                CardEmail(nomeString, horario!!, titulo, previa, conteudo, foto!!, navController, listaEmails)
+                            }
+                        } catch (e: NullPointerException) {
+
+                            Log.e("Erro", "Caixa de Email vazia" )
                         }
                     }
                 }
