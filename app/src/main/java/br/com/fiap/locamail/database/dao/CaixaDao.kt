@@ -13,6 +13,9 @@ interface CaixaDao {
     @Insert
     fun salvar(caixa: CaixaEmail): Long
 
+    @Query("SELECT * FROM tbl_caixa")
+    fun getCaixas(): List<CaixaEmail>
+
     @Transaction
     @Query("SELECT * FROM tbl_caixa")
     fun getCaixaComEmails(): List<CaixaComEmails>

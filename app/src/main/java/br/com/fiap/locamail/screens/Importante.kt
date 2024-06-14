@@ -69,7 +69,7 @@ fun ImportanteScreen(navController: NavController, context: Context) {
                     LazyColumn {
                         try {
                             val caixaRepository = CaixaRepository(context)
-                            val emailsEntrada = caixaRepository.getUmaCaixaComEmails(1)
+                            val emailsEntrada = caixaRepository.getUmaCaixaComEmails(5)
                             val listaEmails = emailsEntrada.emails
 
                             items(listaEmails.size) { item ->
@@ -82,8 +82,9 @@ fun ImportanteScreen(navController: NavController, context: Context) {
                                 val previa = listaEmails[item].conteudo
                                 val foto = listaEmails[item].fotoRemetente
                                 val conteudo = listaEmails[item].conteudo
+                                val emailId = listaEmails[item].emailId.toString()
 
-                                CardEmail(nome, horario!!, titulo, previa, conteudo, foto!!, navController, listaEmails)
+                                CardEmail(nome, horario!!, titulo, previa, conteudo, foto!!, emailId, navController, listaEmails)
                             }
                         } catch (e: NullPointerException) {
                             Log.e("Erro", "Caixa de Email vazia" )

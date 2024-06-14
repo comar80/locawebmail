@@ -29,12 +29,12 @@ import br.com.fiap.locamail.ui.theme.SfPro
 import coil.compose.rememberAsyncImagePainter
 
 @Composable
-fun CardEmail(nome: String, horario: String, titulo: String, previa: String, conteudo: String,  foto: String, navController: NavController, listaEmails: List<Email>) {
+fun CardEmail(nome: String, horario: String, titulo: String, previa: String, conteudo: String,  foto: String, emailId: String, navController: NavController, listaEmails: List<Email>) {
 
     if(listaEmails.isNotEmpty()) {
         Divider(thickness = 1.dp)
         Row(modifier = Modifier.clickable {
-            navController.navigate("email/${titulo}/${nome}/${horario}/${conteudo}")
+            navController.navigate("email/${titulo}/${nome}/${horario}/${conteudo}/${emailId}")
         }) {
             Image(
                 painter = rememberAsyncImagePainter(foto),
