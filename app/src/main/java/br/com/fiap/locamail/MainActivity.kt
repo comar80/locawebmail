@@ -44,11 +44,12 @@ class MainActivity : ComponentActivity() {
 
                         composable(route = "cadastro") { Cadastro(navController) }
 
-                        composable(route = "email/{titulo}/{nome}/{horario}/{conteudo}") {
+                        composable(route = "email/{titulo}/{nome}/{horario}/{conteudo}/{emailId}") {
                             val titulo = it.arguments?.getString("titulo")
                             val nome = it.arguments?.getString("nome")
                             val horario = it.arguments?.getString("horario")
                             val conteudo = it.arguments?.getString("conteudo")
+                            val emailId = it.arguments?.getString("emailId")
 
                             EmailScreen(navController,
                             onCalendarIconClick = {
@@ -57,7 +58,7 @@ class MainActivity : ComponentActivity() {
                             mIntent.putExtra("title", titulo)
                             startActivity(mIntent)
                         },
-                            titulo!!, nome!!, horario!!, conteudo!!) }
+                            titulo!!, nome!!, horario!!, conteudo!!, emailId!!) }
 
                         composable(route = "entrada") { EntradaScreen(navController, baseContext) }
                         composable(route = "enviadas") { EnviadasScreen(navController, baseContext) }

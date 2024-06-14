@@ -13,6 +13,10 @@ class CaixaRepository(context: Context) {
         return db.salvar(caixa = caixa)
     }
 
+    fun getCaixas(): List<CaixaEmail> {
+        return db.getCaixas()
+    }
+
     fun getCaixaComEmails(): List<CaixaComEmails> {
         return db.getCaixaComEmails()
     }

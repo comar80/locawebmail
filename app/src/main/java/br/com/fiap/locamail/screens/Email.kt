@@ -1,5 +1,7 @@
 package br.com.fiap.locamail.screens
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,12 +40,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.locamail.R
+import br.com.fiap.locamail.database.repository.CaixaRepository
+import br.com.fiap.locamail.database.repository.EmailRepository
 import br.com.fiap.locamail.ui.theme.SfPro
 
 @Composable
-fun EmailScreen(navController: NavController, onCalendarIconClick: () -> Unit, titulo: String, nome: String, horario: String, conteudo: String) {
+fun EmailScreen(navController: NavController, onCalendarIconClick: () -> Unit, titulo: String, nome: String, horario: String, conteudo: String, emailId: String) {
 
     var expanded by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val caixaRepository = CaixaRepository(context)
+    val emailRepository = EmailRepository(context)
+    val listaCaixas = caixaRepository.getCaixas()
 
     Box {
         Column(modifier = Modifier
@@ -69,19 +78,17 @@ fun EmailScreen(navController: NavController, onCalendarIconClick: () -> Unit, t
                     horizontalArrangement = Arrangement.End
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.arquivo),
-                        contentDescription = "arquivar",
-                        modifier = Modifier
-                            .size(30.dp)
-                            .padding(top = 10.dp),
-                        tint = colorResource(id = R.color.preto_locaweb)
-                    )
-                    Icon(
                         painter = painterResource(id = R.drawable.lixo),
                         contentDescription = "lixeira",
                         modifier = Modifier
                             .size(30.dp)
-                            .padding(top = 10.dp, start = 10.dp),
+                            .padding(top = 10.dp, start = 10.dp)
+                            .clickable (
+                                onClick = {
+                                    emailRepository.moverEmail(4, emailId.toLong())
+                                    Toast.makeText(context, "Mensagem excluída", Toast.LENGTH_LONG).show()
+                                }
+                            ),
                         tint = colorResource(id = R.color.preto_locaweb)
                     )
                     Icon(
@@ -109,8 +116,13 @@ fun EmailScreen(navController: NavController, onCalendarIconClick: () -> Unit, t
                         )
                         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                             DropdownMenuItem({ Text(text = "Mover para:") }, onClick = { /*TODO*/ }, enabled = false)
-                            DropdownMenuItem({ Text(text = "teste 2") }, onClick = { /*TODO*/ })
-                            DropdownMenuItem({ Text(text = "teste 3") }, onClick = { /*TODO*/ })
+                            listaCaixas.forEach{
+                                DropdownMenuItem({ Text(text = it.nomeCaixa) },
+                                    onClick = {
+                                        emailRepository.moverEmail(it.caixaId, emailId.toLong())
+                                        Toast.makeText(context, "Mensagem movida para ${it.nomeCaixa}", Toast.LENGTH_LONG).show()
+                                    })
+                            }
                         }
                     }
 
@@ -223,16 +235,4 @@ fun EmailScreen(navController: NavController, onCalendarIconClick: () -> Unit, t
 
     }
 
-}
-
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-private fun EmailScreenPV() {
-    val navController = rememberNavController()
-    val titulo = "titulo do email"
-    val nome = "Nome"
-    val horario = "Horario"
-    val conteudo = "conteudo do email"
-
-    EmailScreen(navController = navController, onCalendarIconClick = {}, titulo, nome, horario, conteudo)
 }

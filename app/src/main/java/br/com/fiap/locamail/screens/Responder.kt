@@ -100,15 +100,13 @@ fun ResponderScreen(navController: NavController, titulo: String, nome: String, 
                         contentDescription = "lixeira",
                         modifier = Modifier
                             .size(30.dp)
-                            .padding(top = 10.dp, start = 10.dp),
-                        tint = colorResource(id = R.color.preto_locaweb)
-                    )
-                    Icon(
-                        painter = painterResource(id = R.drawable.opcoes),
-                        contentDescription = "opcoes",
-                        modifier = Modifier
-                            .size(30.dp)
-                            .padding(top = 10.dp, start = 10.dp),
+                            .padding(top = 10.dp, start = 10.dp)
+                            .clickable (
+                                onClick = {
+                                    navController.popBackStack()
+                                    Toast.makeText(context, "Mensagem descartada", Toast.LENGTH_LONG).show()
+                                }
+                            ),
                         tint = colorResource(id = R.color.preto_locaweb)
                     )
                 }

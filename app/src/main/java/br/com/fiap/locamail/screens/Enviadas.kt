@@ -73,8 +73,7 @@ fun EnviadasScreen(navController: NavController, context: Context) {
                             val listaEmails = emailsEntrada.emails
 
                             items(listaEmails.size) { item ->
-                                val nome = listaEmails[item].destinatario
-                                val nomeString = nome.toString().removePrefix("[").removeSuffix("]")
+                                val nome = listaEmails[item].remetente
 
                                 val horarioCompleto = listaEmails[item].horario
                                 val horario = horarioCompleto.format(DateTimeFormatter.ofPattern("dd-MM-yyyy - HH:mm"))
@@ -83,7 +82,9 @@ fun EnviadasScreen(navController: NavController, context: Context) {
                                 val previa = listaEmails[item].conteudo
                                 val foto = listaEmails[item].fotoRemetente
                                 val conteudo = listaEmails[item].conteudo
-                                CardEmail(nomeString, horario!!, titulo, previa, conteudo, foto!!, navController, listaEmails)
+                                val emailId = listaEmails[item].emailId.toString()
+
+                                CardEmail(nome, horario!!, titulo, previa, conteudo, foto!!, emailId, navController, listaEmails)
                             }
                         } catch (e: NullPointerException) {
 
