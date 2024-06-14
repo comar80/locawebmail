@@ -14,5 +14,5 @@ interface EmailDao {
     fun salvar(email: Email): Long
 
     @Query("UPDATE tbl_email SET caixaEmailId = :caixaEmailId WHERE emailId = :emailId")
-    fun moverEmail(caixaEmailId: Long, emailId: Long): Long
+    fun moverEmail(caixaEmailId: Long, emailId: Long): Void
 }

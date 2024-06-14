@@ -13,7 +13,7 @@ class EmailRepository(context: Context) {
         return db.salvar(email = email)
     }
 
-    fun moverEmail(caixaEmailId: Long, emailId: Long): Long{
+    fun moverEmail(caixaEmailId: Long, emailId: Long): Void{
         return db.moverEmail(caixaEmailId, emailId)
     }
 }
