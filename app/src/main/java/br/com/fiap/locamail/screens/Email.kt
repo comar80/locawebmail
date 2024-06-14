@@ -17,10 +17,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -35,6 +41,8 @@ import br.com.fiap.locamail.ui.theme.SfPro
 
 @Composable
 fun EmailScreen(navController: NavController, onCalendarIconClick: () -> Unit, titulo: String, nome: String, horario: String, conteudo: String) {
+
+    var expanded by remember { mutableStateOf(false) }
 
     Box {
         Column(modifier = Modifier
@@ -87,6 +95,25 @@ fun EmailScreen(navController: NavController, onCalendarIconClick: () -> Unit, t
                             },
                         tint = colorResource(id = R.color.preto_locaweb)
                     )
+                    Box {
+                        Icon(
+                            painter = painterResource(id = R.drawable.opcoes),
+                            contentDescription = "calendario",
+                            modifier = Modifier
+                                .size(30.dp)
+                                .padding(top = 10.dp, start = 10.dp)
+                                .clickable(
+                                    onClick = { expanded = true }
+                                ),
+                            tint = colorResource(id = R.color.preto_locaweb)
+                        )
+                        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                            DropdownMenuItem({ Text(text = "Mover para:") }, onClick = { /*TODO*/ }, enabled = false)
+                            DropdownMenuItem({ Text(text = "teste 2") }, onClick = { /*TODO*/ })
+                            DropdownMenuItem({ Text(text = "teste 3") }, onClick = { /*TODO*/ })
+                        }
+                    }
+
                 }
 
             }
