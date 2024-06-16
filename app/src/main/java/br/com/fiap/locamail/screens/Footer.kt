@@ -69,7 +69,7 @@ fun Footer(navController: NavController) {
             Icon(
                 painter = painterResource(id = R.drawable.buscar),
                 contentDescription = "buscar",
-                modifier = tamanhoIconeMenor,
+                modifier = tamanhoIconeMenor.clickable { navController.navigate("buscar") },
                 tint = colorResource(id = R.color.preto_locaweb)
             )
             Text(

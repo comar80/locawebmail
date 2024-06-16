@@ -2,7 +2,6 @@ package br.com.fiap.locamail.database.repository
 
 import android.content.Context
 import br.com.fiap.locamail.database.dao.CadastroDb
-import br.com.fiap.locamail.model.CaixaComEmails
 import br.com.fiap.locamail.model.Email
 
 class EmailRepository(context: Context) {
@@ -15,5 +14,9 @@ class EmailRepository(context: Context) {
 
     fun moverEmail(caixaEmailId: Long, emailId: Long): Void{
         return db.moverEmail(caixaEmailId, emailId)
+    }
+
+    suspend fun buscarEmail(query: String): List<Email> {
+        return db.buscarEmail(query)
     }
 }

@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import br.com.fiap.locamail.mockemail.EmailScreenMock
+import br.com.fiap.locamail.mockemail.MockSearchViewModel
 import br.com.fiap.locamail.screens.ArquivoScreen
 import br.com.fiap.locamail.screens.Cadastro
 import br.com.fiap.locamail.screens.EmailScreen
@@ -24,7 +26,6 @@ import br.com.fiap.locamail.screens.LixeiraScreen
 import br.com.fiap.locamail.screens.Login
 import br.com.fiap.locamail.screens.ResponderScreen
 import br.com.fiap.locamail.ui.theme.LocaMailTheme
-import java.text.SimpleDateFormat
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("SimpleDateFormat")
@@ -65,6 +66,10 @@ class MainActivity : ComponentActivity() {
                         composable(route = "arquivo") { ArquivoScreen(navController, baseContext) }
                         composable(route = "lixeira") { LixeiraScreen(navController, baseContext) }
                         composable(route = "escrever") { EscreverScreen(navController) }
+                        composable(route = "buscar") {
+                            val mockViewModel = MockSearchViewModel()
+                            EmailScreenMock(viewModel = mockViewModel, navController)
+                        }
 
                         composable(route = "responder/{titulo}/{nome}/{conteudo}") {
                             val titulo = it.arguments?.getString("titulo")
