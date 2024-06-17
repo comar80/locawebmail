@@ -260,6 +260,8 @@ fun EncaminharScreen(navController: NavController, titulo: String, conteudo: Str
                             )
                             emailRepository.salvar(email)
 
+                            navController.popBackStack()
+
                             val toast = Toast.makeText(context, "Mensagem enviada com sucesso!", Toast.LENGTH_LONG)
                             toast.show()
                         },
