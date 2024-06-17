@@ -264,6 +264,8 @@ fun EscreverScreen(navController: NavController) {
                             )
                             emailRepository.salvar(email)
 
+                            navController.navigate("entrada")
+
                             val toast = Toast.makeText(context, "Mensagem enviada com sucesso!", Toast.LENGTH_LONG)
                             toast.show()
                         },
@@ -302,14 +304,4 @@ fun EscreverScreen(navController: NavController) {
             }
         }
     }
-}
-
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-private fun EmailScreenPV() {
-    val navController = rememberNavController()
-    fun onAttatchmentClick() {
-
-    }
-    EscreverScreen(navController = navController)
 }

@@ -85,7 +85,7 @@ fun EntradaScreen(navController: NavController, context: Context) {
                             val listaEmails = emailsEntrada.emails
 
                             items(listaEmails.size) { item ->
-                                val nome = listaEmails[item].remetente
+                                val nome = listaEmails[item].destinatario.toString().replace("[", "").replace("]", "")
 
                                 val horarioCompleto = listaEmails[item].horario
                                 val horario = horarioCompleto.format(DateTimeFormatter.ofPattern("dd-MM-yyyy - HH:mm"))

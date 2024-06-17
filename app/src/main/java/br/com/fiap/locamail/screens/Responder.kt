@@ -259,6 +259,8 @@ fun ResponderScreen(navController: NavController, titulo: String, nome: String, 
                             )
                             emailRepository.salvar(email)
 
+                            navController.popBackStack()
+
                             val toast = Toast.makeText(context, "Mensagem enviada com sucesso!", Toast.LENGTH_LONG)
                             toast.show()
                         },
