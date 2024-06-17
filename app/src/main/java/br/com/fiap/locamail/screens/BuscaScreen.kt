@@ -1,4 +1,4 @@
-package br.com.fiap.locamail.mockemail
+package br.com.fiap.locamail.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -27,17 +26,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import br.com.fiap.locamail.R
+import br.com.fiap.locamail.presentation.SearchViewModel
 import kotlinx.coroutines.launch
+import java.time.format.DateTimeFormatter
 
 @Composable
-fun EmailScreenMock(viewModel: SearchViewModelMock, navController: NavController) {
+fun BuscaScreen(viewModel: SearchViewModel, navController: NavController) {
 
     var searchQuery by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
@@ -93,27 +91,21 @@ fun EmailScreenMock(viewModel: SearchViewModelMock, navController: NavController
         }
 
         val emailList by viewModel.emailList.observeAsState(emptyList())
-        LazyColumn {
-            items(emailList) { email ->
-                Column(modifier = Modifier.padding(8.dp)) {
-                    Text(text = "Assunto: ${email.subject}", fontWeight = FontWeight.Bold)
-                    Text(text = "Conteúdo: ${email.body}")
-                    Text(text = "Destinatários: ")
-                    email.recipients.forEach { recipient ->
-                        Text(text = recipient, modifier = Modifier.padding(start = 8.dp))
-                    }
-                }
-                Divider(color = Color.Gray, thickness = 1.dp)
+        LazyColumn(modifier = Modifier.padding(start = 5.dp, end = 5.dp)) {
+            items(emailList)  { item ->
+                val nome = item.remetente
+
+                val horarioCompleto = item.horario
+                val horario = horarioCompleto.format(DateTimeFormatter.ofPattern("dd-MM-yyyy - HH:mm"))
+
+                val titulo = item.titulo
+                val previa = item.conteudo
+                val foto = item.fotoRemetente
+                val conteudo = item.conteudo
+                val emailId = item.emailId.toString()
+
+                CardEmail(nome, horario!!, titulo, previa, conteudo, foto!!, emailId, navController, emailList)
             }
         }
     }
 }
-@Preview(showBackground = true)
-@Composable
-fun PreviewEmailScreen() {
-    val mockNavController = rememberNavController()
-    val mockViewModel = MockSearchViewModel()
-
-    EmailScreenMock(viewModel = mockViewModel, navController = mockNavController)
-}
-

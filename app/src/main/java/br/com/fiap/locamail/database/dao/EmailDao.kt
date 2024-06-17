@@ -16,4 +16,7 @@ interface EmailDao {
 
     @Query("SELECT * FROM tbl_email WHERE titulo LIKE :titulo")
     suspend fun buscarEmail(titulo: String):List<Email>
+
+    @Query("SELECT * FROM tbl_email")
+    fun buscarTodosEmails():List<Email>
 }

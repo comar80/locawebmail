@@ -19,4 +19,8 @@ class EmailRepository(context: Context) {
     suspend fun buscarEmail(query: String): List<Email> {
         return db.buscarEmail(query)
     }
+
+    fun buscarTodosEmails(): List<Email> {
+        return db.buscarTodosEmails()
+    }
 }
