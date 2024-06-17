@@ -29,4 +29,6 @@
 
 
 #### Busca
-<img src="https://github.com/comar80/locawebmail/blob/main/app/src/main/java/br/com/fiap/locamail/resources/prints/Buscar.png" alt="busca" width="250"/>
+<img src="https://github.com/comar80/locawebmail/blob/main/app/src/main/java/br/com/fiap/locamail/resources/prints/Buscar%203.png" alt="busca" width="250"/>
+
+<img src="https://github.com/comar80/locawebmail/blob/main/app/src/main/java/br/com/fiap/locamail/resources/prints/Buscar%202.png" alt="busca" width="250"/>
