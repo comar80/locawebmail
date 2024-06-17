@@ -86,6 +86,7 @@ fun EmailScreen(navController: NavController, onCalendarIconClick: () -> Unit, t
                             .clickable (
                                 onClick = {
                                     emailRepository.moverEmail(4, emailId.toLong())
+                                    navController.popBackStack()
                                     Toast.makeText(context, "Mensagem excluída", Toast.LENGTH_LONG).show()
                                 }
                             ),
@@ -120,6 +121,7 @@ fun EmailScreen(navController: NavController, onCalendarIconClick: () -> Unit, t
                                 DropdownMenuItem({ Text(text = it.nomeCaixa) },
                                     onClick = {
                                         emailRepository.moverEmail(it.caixaId, emailId.toLong())
+                                        navController.popBackStack()
                                         Toast.makeText(context, "Mensagem movida para ${it.nomeCaixa}", Toast.LENGTH_LONG).show()
                                     })
                             }
