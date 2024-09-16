@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun ImportanteScreen(navController: NavController, context: Context) {
+fun ImportanteScreen(navController: NavController, context: Context, isDarkMode: Boolean, onThemeChange: (Boolean)->Unit) {
 
     val jsonString = ReadJSONFromAssets(context, "emails.json")
     val listaEmail = Gson().fromJson(jsonString, Array<EmailModel>::class.java).asList()
@@ -43,7 +43,7 @@ fun ImportanteScreen(navController: NavController, context: Context) {
     }
 
     ModalNavigationDrawer(drawerContent = {
-        MenuLateral(navController)
+        MenuLateral(navController, isDarkMode, onThemeChange)
     },
         drawerState = drawerState
     ) {
@@ -84,7 +84,7 @@ fun ImportanteScreen(navController: NavController, context: Context) {
                                 val conteudo = listaEmails[item].conteudo
                                 val emailId = listaEmails[item].emailId.toString()
 
-                                CardEmail(nome, horario!!, titulo, previa, conteudo, foto!!, emailId, navController, listaEmails)
+                                //CardEmail(nome, horario!!, titulo, previa, conteudo, foto!!, emailId, navController, listaEmails)
                             }
                         } catch (e: NullPointerException) {
                             Log.e("Erro", "Caixa de Email vazia" )

@@ -104,7 +104,7 @@ fun BuscaScreen(viewModel: SearchViewModel, navController: NavController) {
                 val conteudo = item.conteudo
                 val emailId = item.emailId.toString()
 
-                CardEmail(nome, horario!!, titulo, previa, conteudo, foto!!, emailId, navController, emailList)
+                //CardEmail(nome, horario!!, titulo, previa, conteudo, foto!!, emailId, navController, emailList)
             }
         }
     }
