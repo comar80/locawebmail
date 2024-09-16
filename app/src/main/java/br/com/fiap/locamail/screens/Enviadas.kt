@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -22,18 +21,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import br.com.fiap.locamail.model.EmailModel
-import br.com.fiap.locamail.utils.ReadJSONFromAssets
-import com.google.gson.Gson
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import br.com.fiap.locamail.database.repository.CaixaRepository
-import br.com.fiap.locamail.database.repository.EmailRepository
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun EnviadasScreen(navController: NavController, context: Context) {
+fun EnviadasScreen(navController: NavController, context: Context, isDarkMode: Boolean, onThemeChange: (Boolean)->Unit) {
 
 
     val caixaRepository = CaixaRepository(context)
@@ -44,7 +39,7 @@ fun EnviadasScreen(navController: NavController, context: Context) {
     }
 
     ModalNavigationDrawer(drawerContent = {
-        MenuLateral(navController)
+        MenuLateral(navController, isDarkMode, onThemeChange)
     },
         drawerState = drawerState
     ) {
@@ -84,7 +79,7 @@ fun EnviadasScreen(navController: NavController, context: Context) {
                                 val conteudo = listaEmails[item].conteudo
                                 val emailId = listaEmails[item].emailId.toString()
 
-                                CardEmail(nome, horario!!, titulo, previa, conteudo, foto!!, emailId, navController, listaEmails)
+                                //CardEmail(nome, horario!!, titulo, previa, conteudo, foto!!, emailId, navController, listaEmails)
                             }
                         } catch (e: NullPointerException) {
 

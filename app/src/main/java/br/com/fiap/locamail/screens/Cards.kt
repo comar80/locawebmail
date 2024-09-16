@@ -7,11 +7,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -24,12 +22,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import br.com.fiap.locamail.R
-import br.com.fiap.locamail.model.Email
 import br.com.fiap.locamail.ui.theme.SfPro
 import coil.compose.rememberAsyncImagePainter
 
 @Composable
-fun CardEmail(nome: String, horario: String, titulo: String, previa: String, conteudo: String,  foto: String, emailId: String, navController: NavController, listaEmails: List<Email>) {
+fun CardEmail(nome: String, horario: String, titulo: String, previa: String, conteudo: String, foto: String, emailId: String, navController: NavController, listaEmails: List<br.com.fiap.locamail.data.model.Email>) {
 
     if(listaEmails.isNotEmpty()) {
         Divider(thickness = 1.dp)

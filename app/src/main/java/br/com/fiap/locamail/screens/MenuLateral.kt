@@ -1,19 +1,25 @@
 package br.com.fiap.locamail.screens
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -26,7 +32,7 @@ import br.com.fiap.locamail.model.MenuItem
 import kotlinx.coroutines.launch
 
 @Composable
-fun MenuLateral(navController: NavController) {
+fun MenuLateral(navController: NavController, isDarkMode: Boolean, onThemeChange: (Boolean) -> Unit) {
 
     val tamanhoIcone = Modifier
         .size(35.dp)
@@ -109,5 +115,12 @@ fun MenuLateral(navController: NavController) {
                     .padding(NavigationDrawerItemDefaults.ItemPadding)
             )
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        SwitchTheme(isDarkMode, onThemeChange)
+
     }
+
+
 }

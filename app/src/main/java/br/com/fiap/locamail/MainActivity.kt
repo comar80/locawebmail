@@ -8,6 +8,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,14 +36,17 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            LocaMailTheme {
+            var isDarkMode by remember {
+                mutableStateOf(false)
+            }
+            LocaMailTheme(darkTheme = isDarkMode) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
 
                     val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = "login") {
+                    NavHost(navController = navController, startDestination = "entrada") {
 
                         composable(route = "login") { Login(navController) }
 
@@ -61,11 +68,22 @@ class MainActivity : ComponentActivity() {
                         },
                             titulo!!, nome!!, horario!!, conteudo!!, emailId!!) }
 
-                        composable(route = "entrada") { EntradaScreen(navController, baseContext) }
-                        composable(route = "enviadas") { EnviadasScreen(navController, baseContext) }
-                        composable(route = "importante") { ImportanteScreen(navController, baseContext) }
-                        composable(route = "arquivo") { ArquivoScreen(navController, baseContext) }
-                        composable(route = "lixeira") { LixeiraScreen(navController, baseContext) }
+                        composable(route = "entrada") { EntradaScreen(navController, baseContext, isDarkMode = isDarkMode) {
+                            isDarkMode = !isDarkMode
+                        }
+                        }
+                        composable(route = "enviadas") { EnviadasScreen(navController, baseContext, isDarkMode = isDarkMode) {
+                            isDarkMode = !isDarkMode
+                        } }
+                        composable(route = "importante") { ImportanteScreen(navController, baseContext, isDarkMode = isDarkMode) {
+                            isDarkMode = !isDarkMode
+                        } }
+                        composable(route = "arquivo") { ArquivoScreen(navController, baseContext, isDarkMode = isDarkMode) {
+                            isDarkMode = !isDarkMode
+                        } }
+                        composable(route = "lixeira") { LixeiraScreen(navController, baseContext, isDarkMode = isDarkMode) {
+                            isDarkMode = !isDarkMode
+                        } }
                         composable(route = "escrever") { EscreverScreen(navController) }
                         composable(route = "buscar") {
                             val mockViewModel = SearchViewModel(baseContext)
