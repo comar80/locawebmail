@@ -8,12 +8,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -26,20 +29,50 @@ import br.com.fiap.locamail.utils.ReadJSONFromAssets
 import com.google.gson.Gson
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.colorResource
+import br.com.fiap.locamail.R
+import br.com.fiap.locamail.data.model.Email
+import br.com.fiap.locamail.data.network.RetrofitClient
 import br.com.fiap.locamail.database.repository.CaixaRepository
+import br.com.fiap.locamail.ui.theme.SfPro
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun LixeiraScreen(navController: NavController, context: Context, isDarkMode: Boolean, onThemeChange: (Boolean)->Unit) {
 
-    val jsonString = ReadJSONFromAssets(context, "emails.json")
-    val listaEmail = Gson().fromJson(jsonString, Array<EmailModel>::class.java).asList()
-
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedItemIndex by rememberSaveable {
         mutableStateOf(0)
+    }
+
+    var emailList by remember { mutableStateOf<List<Email>>(emptyList()) }
+    val filteredEmailList = emailList.filter { it.caixaEmailId == "lixeira" }
+
+    LaunchedEffect(Unit) {
+        val call = RetrofitClient().getApiService().getEmails()
+
+        call.enqueue(object : Callback<List<Email>> {
+            override fun onResponse(
+                call: Call<List<Email>>,
+                response: Response<List<Email>>
+            ) {
+                response.body()?.let {
+                    emailList = it
+                }
+            }
+
+            override fun onFailure(call: Call<List<Email>>, t: Throwable) {
+                Log.i("Error", "Erro da Reposta: ${t.message}")
+            }
+        })
     }
 
     ModalNavigationDrawer(drawerContent = {
@@ -66,29 +99,35 @@ fun LixeiraScreen(navController: NavController, context: Context, isDarkMode: Bo
                 ListaIcones(navController)
 
                 Box(modifier = Modifier.height(500.dp)) {
-                    LazyColumn {
-                        try {
-                            val caixaRepository = CaixaRepository(context)
-                            val emailsEntrada = caixaRepository.getUmaCaixaComEmails(4)
-                            val listaEmails = emailsEntrada.emails
+                    if (filteredEmailList.isNotEmpty()) {
+                        LazyColumn {
+                            items(filteredEmailList.size) { index ->
+                                val email = filteredEmailList[index]
 
-                            items(listaEmails.size) { item ->
-                                val nome = listaEmails[item].destinatario.toString().replace("[", "").replace("]", "")
-
-                                val horarioCompleto = listaEmails[item].horario
-                                val horario = horarioCompleto.format(DateTimeFormatter.ofPattern("dd-MM-yyyy - HH:mm"))
-
-                                val titulo = listaEmails[item].titulo
-                                val previa = listaEmails[item].conteudo
-                                val foto = listaEmails[item].fotoRemetente
-                                val conteudo = listaEmails[item].conteudo
-                                val emailId = listaEmails[item].emailId.toString()
-
-                                //CardEmail(nome, horario!!, titulo, previa, conteudo, foto!!, emailId, navController, listaEmails)
+                                val parsedDate = ZonedDateTime.parse(email.horario)
+                                val formattedHorario = parsedDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy - HH:mm"))
+                                CardEmail(
+                                    nome = email.destinatario.joinToString(", "),
+                                    horario = formattedHorario,
+                                    titulo = email.titulo,
+                                    previa = email.conteudo.take(50),
+                                    conteudo = email.conteudo,
+                                    foto = email.fotoRemetente!!,
+                                    emailId = email.emailId,
+                                    navController = navController,
+                                    listaEmails = filteredEmailList
+                                )
                             }
-                        } catch (e: NullPointerException) {
-                            Log.e("Erro", "Caixa de Email vazia" )
                         }
+                    } else {
+                        Divider(thickness = 1.dp)
+                        Text(text = "Caixa de Emails vazia",
+                            modifier = Modifier
+                                .padding(start = 10.dp)
+                                .align(Alignment.Center),
+                            color = colorResource(id = R.color.preto_locaweb),
+                            fontFamily = SfPro
+                        )
                     }
                 }
 

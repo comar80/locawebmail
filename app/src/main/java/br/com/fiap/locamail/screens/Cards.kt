@@ -28,7 +28,6 @@ import coil.compose.rememberAsyncImagePainter
 @Composable
 fun CardEmail(nome: String, horario: String, titulo: String, previa: String, conteudo: String, foto: String, emailId: String, navController: NavController, listaEmails: List<br.com.fiap.locamail.data.model.Email>) {
 
-    if(listaEmails.isNotEmpty()) {
         Divider(thickness = 1.dp)
         Row(modifier = Modifier.clickable {
             navController.navigate("email/${titulo}/${nome}/${horario}/${conteudo}/${emailId}")
@@ -61,15 +60,7 @@ fun CardEmail(nome: String, horario: String, titulo: String, previa: String, con
                 )
             }
         }
-    } else {
-        Divider(thickness = 1.dp)
-        Text(text = "Caixa de Emails vazia",
-            modifier = Modifier.padding(start = 10.dp),
-            color = colorResource(id = R.color.preto_locaweb),
-            fontFamily = SfPro
-        )
 
-    }
 
 }
 
