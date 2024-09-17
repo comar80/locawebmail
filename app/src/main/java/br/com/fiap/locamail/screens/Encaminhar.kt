@@ -2,6 +2,7 @@ package br.com.fiap.locamail.screens
 
 
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -35,6 +36,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,11 +50,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.locamail.R
+import br.com.fiap.locamail.data.apiRepository.EmailApiRepository
+import br.com.fiap.locamail.data.model.EmailCreate
+import br.com.fiap.locamail.data.network.RetrofitClient
 import br.com.fiap.locamail.database.repository.EmailRepository
 import br.com.fiap.locamail.model.Email
 import br.com.fiap.locamail.ui.theme.SfPro
 import br.com.fiap.locamail.utils.getFileNameFromUri
 import br.com.fiap.locamail.utils.getSizeFromUri
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,7 +77,8 @@ fun EncaminharScreen(navController: NavController, titulo: String, conteudo: Str
     }
     val listaAnexo = remember { mutableListOf<Uri?>() }
     val context = LocalContext.current
-    val emailRepository = EmailRepository(context)
+    val emailRepository = EmailApiRepository(apiService = RetrofitClient().getApiService())
+    val coroutineScope = rememberCoroutineScope()
 
     Box() {
         Column(modifier = Modifier
@@ -245,25 +252,32 @@ fun EncaminharScreen(navController: NavController, titulo: String, conteudo: Str
                             val anexo = ArrayList<String>()
                             anexo.add(listaAnexo.toString())
 
-                            val email = Email(
-                                emailId = 0,
-                                caixaEmailId = 2,
-                                remetente = destinatarioState,
-                                destinatario = destinatario,
-                                destCopia = destCopia,
-                                destOculto = destOculto,
-                                horario = LocalDateTime.now(),
+                            val email = EmailCreate(
+                                caixaEmail_id = "saida",
+                                user_id = "66e98e8ca8b0e83393485211",
+                                email_de = "mail@mail.com",
+                                email_para = destinatario,
+                                email_cc = destCopia,
+                                email_cco = destOculto,
+                                horario = LocalDateTime.now().toString(),
                                 titulo = tituloState,
                                 conteudo = conteudoState,
-                                fotoRemetente = "https://i.ibb.co/8dXv21g/locaweb.png",
+                                foto = "https://i.ibb.co/8dXv21g/locaweb.png",
                                 anexo = anexo
                             )
-                            emailRepository.salvar(email)
 
-                            navController.popBackStack()
-
-                            val toast = Toast.makeText(context, "Mensagem enviada com sucesso!", Toast.LENGTH_LONG)
-                            toast.show()
+                            coroutineScope.launch {
+                                emailRepository.createEmail(email) { createdEmail ->
+                                    if (createdEmail != null) {
+                                        navController.popBackStack()
+                                        val toast = Toast.makeText(context, "Mensagem enviada com sucesso!", Toast.LENGTH_LONG)
+                                        toast.show()
+                                    } else {
+                                        // Handle failure, show error message
+                                        Log.e("CreateEmail", "Failed to create email")
+                                    }
+                                }
+                            }
                         },
                         shape = RoundedCornerShape(5.dp),
                         colors = ButtonDefaults.buttonColors(

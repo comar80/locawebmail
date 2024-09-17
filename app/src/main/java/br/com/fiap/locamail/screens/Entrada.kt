@@ -27,9 +27,14 @@ import androidx.navigation.NavController
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextAlign
+import br.com.fiap.locamail.R
 import br.com.fiap.locamail.data.model.Email
 import br.com.fiap.locamail.data.network.RetrofitClient
 import br.com.fiap.locamail.database.repository.CaixaRepository
+import br.com.fiap.locamail.ui.theme.SfPro
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -48,6 +53,7 @@ fun EntradaScreen(navController: NavController, context: Context, isDarkMode: Bo
     }
 
     var emailList by remember { mutableStateOf<List<Email>>(emptyList()) }
+    val filteredEmailList = emailList.filter { it.caixaEmailId == "entrada" }
 
     LaunchedEffect(Unit) {
         val call = RetrofitClient().getApiService().getEmails()
@@ -92,10 +98,10 @@ fun EntradaScreen(navController: NavController, context: Context, isDarkMode: Bo
                 ListaIcones(navController)
 
                 Box(modifier = Modifier.height(500.dp)) {
-                    if (emailList.isNotEmpty()) {
+                    if (filteredEmailList.isNotEmpty()) {
                         LazyColumn {
-                            items(emailList.size) { index ->
-                                val email = emailList[index]
+                            items(filteredEmailList.size) { index ->
+                                val email = filteredEmailList[index]
 
                                 val parsedDate = ZonedDateTime.parse(email.horario)
                                 val formattedHorario = parsedDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy - HH:mm"))
@@ -108,12 +114,19 @@ fun EntradaScreen(navController: NavController, context: Context, isDarkMode: Bo
                                     foto = email.fotoRemetente!!,
                                     emailId = email.emailId,
                                     navController = navController,
-                                    listaEmails = emailList
+                                    listaEmails = filteredEmailList
                                 )
                             }
                         }
                     } else {
-                        Text(text = "Caixa de Emails vazia", modifier = Modifier.padding(16.dp))
+                            Divider(thickness = 1.dp)
+                            Text(text = "Caixa de Emails vazia",
+                                modifier = Modifier
+                                    .padding(start = 10.dp)
+                                    .align(Alignment.Center),
+                                color = colorResource(id = R.color.preto_locaweb),
+                                fontFamily = SfPro
+                            )
                     }
                 }
 

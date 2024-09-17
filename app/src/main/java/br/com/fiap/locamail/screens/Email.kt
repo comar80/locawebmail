@@ -1,6 +1,7 @@
 package br.com.fiap.locamail.screens
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -25,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,9 +42,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.locamail.R
+import br.com.fiap.locamail.data.apiRepository.EmailApiRepository
+import br.com.fiap.locamail.data.network.ApiService
+import br.com.fiap.locamail.data.network.RetrofitClient
 import br.com.fiap.locamail.database.repository.CaixaRepository
 import br.com.fiap.locamail.database.repository.EmailRepository
 import br.com.fiap.locamail.ui.theme.SfPro
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun EmailScreen(navController: NavController, onCalendarIconClick: () -> Unit, titulo: String, nome: String, horario: String, conteudo: String, emailId: String) {
@@ -50,8 +61,34 @@ fun EmailScreen(navController: NavController, onCalendarIconClick: () -> Unit, t
     var expanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val caixaRepository = CaixaRepository(context)
-    val emailRepository = EmailRepository(context)
-    val listaCaixas = caixaRepository.getCaixas()
+
+    data class CaixaEmail(
+        val id: String,
+        val nomeCaixa: String
+    )
+    val listaCaixas = listOf (
+        CaixaEmail(
+            id = "entrada",
+            nomeCaixa = "entrada"
+        ),
+        CaixaEmail(
+            id = "saida",
+            nomeCaixa = "saida"
+        ),
+        CaixaEmail(
+            id = "arquivo",
+            nomeCaixa = "arquivo"
+        ),
+        CaixaEmail(
+            id = "importante",
+            nomeCaixa = "importante"
+        ),
+        CaixaEmail(
+            id = "lixeira",
+            nomeCaixa = "lixeira"
+        ),
+    )
+
 
     Box {
         Column(modifier = Modifier
@@ -83,11 +120,13 @@ fun EmailScreen(navController: NavController, onCalendarIconClick: () -> Unit, t
                         modifier = Modifier
                             .size(30.dp)
                             .padding(top = 10.dp, start = 10.dp)
-                            .clickable (
+                            .clickable(
                                 onClick = {
-                                    emailRepository.moverEmail(4, emailId.toLong())
+                                    moverEmailAction("lixeira", emailId)
                                     navController.popBackStack()
-                                    Toast.makeText(context, "Mensagem excluída", Toast.LENGTH_LONG).show()
+                                    Toast
+                                        .makeText(context, "Mensagem excluída", Toast.LENGTH_LONG)
+                                        .show()
                                 }
                             ),
                         tint = colorResource(id = R.color.preto_locaweb)
@@ -120,7 +159,7 @@ fun EmailScreen(navController: NavController, onCalendarIconClick: () -> Unit, t
                             listaCaixas.forEach{
                                 DropdownMenuItem({ Text(text = it.nomeCaixa) },
                                     onClick = {
-                                        emailRepository.moverEmail(it.caixaId, emailId.toLong())
+                                        moverEmailAction(it.id, emailId)
                                         navController.popBackStack()
                                         Toast.makeText(context, "Mensagem movida para ${it.nomeCaixa}", Toast.LENGTH_LONG).show()
                                     })
@@ -238,3 +277,24 @@ fun EmailScreen(navController: NavController, onCalendarIconClick: () -> Unit, t
     }
 
 }
+
+fun moverEmailAction(caixaEmailId: String, emailId: String) {
+    val repository = EmailApiRepository(apiService = RetrofitClient().getApiService())
+
+    CoroutineScope(Dispatchers.IO).launch {
+        repository.moverEmail(caixaEmailId, emailId).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    Log.i("Success", "Email movido com sucesso!")
+                } else {
+                    Log.e("Error", "Falha ao mover email")
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Log.e("Error", "Chamada para API falhou: ${t.message}")
+            }
+        })
+    }
+}
+
