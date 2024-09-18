@@ -2,6 +2,9 @@ package br.com.fiap.locamail.data.network
 
 import br.com.fiap.locamail.data.model.Email
 import br.com.fiap.locamail.data.model.EmailCreate
+import br.com.fiap.locamail.data.model.LoginRequest
+import br.com.fiap.locamail.data.model.LoginResponse
+import br.com.fiap.locamail.data.model.UserCreate
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -10,6 +13,8 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface ApiService {
+
+    //EMAIL
     @GET("api/email/all")
     fun getEmails(): Call<List<Email>>
 
@@ -24,4 +29,11 @@ interface ApiService {
         @Path("id") emailId: String,
         @Body updatedEmail: Email
     ): Call<Void>
+
+    //USER
+    @POST("api/user/insert")
+    fun createUser(@Body user: UserCreate): Call<UserCreate>
+
+    @POST("auth/login")
+    fun loginUser(@Body loginRequest: LoginRequest): Call<LoginResponse>
 }
