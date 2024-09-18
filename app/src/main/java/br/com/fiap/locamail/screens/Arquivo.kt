@@ -57,7 +57,7 @@ fun ArquivoScreen(navController: NavController, context: Context, isDarkMode: Bo
     val filteredEmailList = emailList.filter { it.caixaEmailId == "arquivo" }
 
     LaunchedEffect(Unit) {
-        val call = RetrofitClient().getApiService().getEmails()
+        val call = RetrofitClient.getApiService().getEmails()
 
         call.enqueue(object : Callback<List<Email>> {
             override fun onResponse(

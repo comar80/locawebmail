@@ -56,7 +56,7 @@ fun EnviadasScreen(navController: NavController, context: Context, isDarkMode: B
     val filteredEmailList = emailList.filter { it.caixaEmailId == "saida" }
 
     LaunchedEffect(Unit) {
-        val call = RetrofitClient().getApiService().getEmails()
+        val call = RetrofitClient.getApiService().getEmails()
 
         call.enqueue(object : Callback<List<Email>> {
             override fun onResponse(
