@@ -67,7 +67,7 @@ fun Login(navController: NavController) {
     val context = LocalContext.current
     val cadastroRepository = CadastroRepository(context)
 
-    val userApiRepository = UserApiRepository(apiService = RetrofitClient().getApiService())
+    val userApiRepository = UserApiRepository(apiService = RetrofitClient.getApiService())
     val coroutineScope = rememberCoroutineScope()
 
     Column(
@@ -160,12 +160,20 @@ fun Login(navController: NavController) {
                     viewModel.onLoginEvent(LoginFormEvent.Submit)
                     isLoading = true
                     coroutineScope.launch {
-                        userApiRepository.loginUser(userState, senhaState) { response ->
-                            loginSuccess = response != null
-                            isLoading = false
-                        }
-                    }
-                          },
+                        userApiRepository.loginUser(userState, senhaState,
+                            onLoginSuccess = {
+                                loginSuccess = true
+                                isLoading = false
+                                // Trigger the navigation or any post-login logic here
+                                navController.navigate("entrada")
+                            },
+                            onLoginFailure = {
+                                loginSuccess = false
+                                isLoading = false
+                                Toast.makeText(context, "Senha ou usuário incorretos", Toast.LENGTH_LONG).show()
+                            }
+                        )
+                    } },
                 colors = ButtonDefaults.buttonColors(Color.White),
                 shape = RoundedCornerShape(5.dp),
                 elevation = ButtonDefaults.elevatedButtonElevation(8.dp)
@@ -187,7 +195,6 @@ fun Login(navController: NavController) {
         viewModel.validationEvents.collect { event ->
             when (event) {
                 is MainViewModel.ValidationEvent.Success -> {
-
                     loginSuccess?.let {
                         if (it) {
                             navController.navigate("entrada")

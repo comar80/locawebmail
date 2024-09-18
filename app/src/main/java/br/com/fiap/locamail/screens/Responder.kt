@@ -82,7 +82,7 @@ fun ResponderScreen(navController: NavController, titulo: String, nome: String, 
     }
     val listaAnexo = remember { mutableListOf<Uri?>() }
     val context = LocalContext.current
-    val emailRepository = EmailApiRepository(apiService = RetrofitClient().getApiService())
+    val emailRepository = EmailApiRepository(apiService = RetrofitClient.getApiService())
     val coroutineScope = rememberCoroutineScope()
 
     Box() {

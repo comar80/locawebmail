@@ -77,7 +77,7 @@ fun Cadastro(navController: NavController) {
     val context = LocalContext.current
     val cadastroRepository = CadastroRepository(context)
 
-    val userRepository = UserApiRepository(apiService = RetrofitClient().getApiService())
+    val userRepository = UserApiRepository(apiService = RetrofitClient.getApiService())
     val coroutineScope = rememberCoroutineScope()
 
     Column(

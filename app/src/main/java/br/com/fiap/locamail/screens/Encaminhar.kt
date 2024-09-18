@@ -77,7 +77,7 @@ fun EncaminharScreen(navController: NavController, titulo: String, conteudo: Str
     }
     val listaAnexo = remember { mutableListOf<Uri?>() }
     val context = LocalContext.current
-    val emailRepository = EmailApiRepository(apiService = RetrofitClient().getApiService())
+    val emailRepository = EmailApiRepository(apiService = RetrofitClient.getApiService())
     val coroutineScope = rememberCoroutineScope()
 
     Box() {

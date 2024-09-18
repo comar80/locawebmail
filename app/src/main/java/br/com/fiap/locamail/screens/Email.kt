@@ -279,7 +279,7 @@ fun EmailScreen(navController: NavController, onCalendarIconClick: () -> Unit, t
 }
 
 fun moverEmailAction(caixaEmailId: String, emailId: String) {
-    val repository = EmailApiRepository(apiService = RetrofitClient().getApiService())
+    val repository = EmailApiRepository(apiService = RetrofitClient.getApiService())
 
     CoroutineScope(Dispatchers.IO).launch {
         repository.moverEmail(caixaEmailId, emailId).enqueue(object : Callback<Void> {
