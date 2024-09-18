@@ -36,6 +36,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+
             var isDarkMode by remember {
                 mutableStateOf(false)
             }
@@ -46,7 +47,7 @@ class MainActivity : ComponentActivity() {
                 ) {
 
                     val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = "entrada") {
+                    NavHost(navController = navController, startDestination = "login") {
 
                         composable(route = "login") { Login(navController) }
 

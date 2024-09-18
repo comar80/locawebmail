@@ -1,5 +1,7 @@
 package br.com.fiap.locamail.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,10 +51,15 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.locamail.presentation.MainViewModel
 import br.com.fiap.locamail.R
+import br.com.fiap.locamail.data.apiRepository.EmailApiRepository
+import br.com.fiap.locamail.data.apiRepository.UserApiRepository
+import br.com.fiap.locamail.data.model.UserCreate
+import br.com.fiap.locamail.data.network.RetrofitClient
 import br.com.fiap.locamail.presentation.RegistrationFormEvent
 import br.com.fiap.locamail.database.repository.CadastroRepository
 import br.com.fiap.locamail.model.Cadastro
 import br.com.fiap.locamail.ui.theme.SfPro
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,6 +76,9 @@ fun Cadastro(navController: NavController) {
     val state = viewModel.state
     val context = LocalContext.current
     val cadastroRepository = CadastroRepository(context)
+
+    val userRepository = UserApiRepository(apiService = RetrofitClient().getApiService())
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -227,27 +238,27 @@ fun Cadastro(navController: NavController) {
             when (event) {
                 is MainViewModel.ValidationEvent.Success -> {
 
-                    val cadastro = Cadastro(
-                        id = 0,
-                        nome = nomeState,
-                        sobrenome = sobrenomeState,
-                        user = userState,
-                        senha = senhaState
+                    val user = UserCreate(
+                        name = nomeState,
+                        lastName = sobrenomeState,
+                        userName = userState,
+                        password = senhaState
                     )
 
-                    cadastroRepository.salvar(cadastro)
-
-                    navController.navigate("login")
+                    coroutineScope.launch {
+                        userRepository.createUser(user) { createdUser ->
+                            if (createdUser != null) {
+                                navController.navigate("login")
+                                val toast = Toast.makeText(context, "Usuário criado com sucesso!", Toast.LENGTH_LONG)
+                                toast.show()
+                            } else {
+                                // Handle failure, show error message
+                                Log.e("CreateUser", "Failed to create user")
+                            }
+                        }
+                    }
                 }
             }
         }
     }
-}
-
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun CadastroScreenPV() {
-    val navController = rememberNavController()
-    Cadastro(navController = navController)
 }

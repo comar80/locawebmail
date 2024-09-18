@@ -1,9 +1,5 @@
 package br.com.fiap.locamail.data.network
 
-import br.com.fiap.locamail.data.model.EmailCreate
-import br.com.fiap.locamail.utils.EmailSerializer
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -14,7 +10,7 @@ class RetrofitClient {
 
     private val authInterceptor =
         AuthInterceptor(
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6InVzZXJ0ZXN0ZSIsImV4cCI6MTcyNjYxOTUyNH0.14vzYqMoGVdUNkaaFT58U_unABaq8okKeUskhVAsCLk")
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6InN0cmluZyIsImV4cCI6MTcyNjY3MDE3MX0.0cckTdKaCbhqpRzctn1VJIu3Zr-Wo9CU-KTXqkeBzrk")
 
     private val client = OkHttpClient.Builder()
         .addInterceptor(authInterceptor)

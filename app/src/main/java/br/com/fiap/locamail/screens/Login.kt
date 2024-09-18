@@ -1,7 +1,5 @@
 package br.com.fiap.locamail.screens
 
-import android.database.sqlite.SQLiteConstraintException
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,6 +28,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,22 +40,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import br.com.fiap.locamail.presentation.LoginFormEvent
 import br.com.fiap.locamail.presentation.MainViewModel
 import br.com.fiap.locamail.R
+import br.com.fiap.locamail.data.apiRepository.UserApiRepository
+import br.com.fiap.locamail.data.network.RetrofitClient
 import br.com.fiap.locamail.database.repository.CadastroRepository
-import br.com.fiap.locamail.database.repository.CaixaRepository
-import br.com.fiap.locamail.database.repository.EmailRepository
-import br.com.fiap.locamail.model.CaixaEmail
-import br.com.fiap.locamail.model.Email
 import br.com.fiap.locamail.ui.theme.SfPro
-import java.time.LocalDateTime
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,47 +59,16 @@ fun Login(navController: NavController) {
 
     var userState by remember { mutableStateOf("") }
     var senhaState by remember { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(false) }
+    var loginSuccess by remember { mutableStateOf<Boolean?>(null) }
 
     val viewModel = viewModel<MainViewModel>()
     val state = viewModel.state
     val context = LocalContext.current
     val cadastroRepository = CadastroRepository(context)
-    val caixaRepository = CaixaRepository(context)
 
-    try {
-        val entrada = CaixaEmail(
-            caixaId = 1,
-            nomeCaixa = "entrada"
-        )
-        caixaRepository.salvar(entrada)
-
-        val saida = CaixaEmail(
-            caixaId = 2,
-            nomeCaixa = "saida"
-        )
-        caixaRepository.salvar(saida)
-
-        val arquivo = CaixaEmail(
-            caixaId = 3,
-            nomeCaixa = "arquivo"
-        )
-        caixaRepository.salvar(arquivo)
-
-        val lixeira = CaixaEmail(
-            caixaId = 4,
-            nomeCaixa = "lixeira"
-        )
-        caixaRepository.salvar(lixeira)
-
-        val importante = CaixaEmail(
-            caixaId = 5,
-            nomeCaixa = "importante"
-        )
-        caixaRepository.salvar(importante)
-
-    } catch (e: SQLiteConstraintException) {
-        Log.d("erro", "Tabelas de caixas já criadas")
-    }
+    val userApiRepository = UserApiRepository(apiService = RetrofitClient().getApiService())
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -192,7 +156,16 @@ fun Login(navController: NavController) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Button(
-                onClick = { viewModel.onLoginEvent(LoginFormEvent.Submit) },
+                onClick = {
+                    viewModel.onLoginEvent(LoginFormEvent.Submit)
+                    isLoading = true
+                    coroutineScope.launch {
+                        userApiRepository.loginUser(userState, senhaState) { response ->
+                            loginSuccess = response != null
+                            isLoading = false
+                        }
+                    }
+                          },
                 colors = ButtonDefaults.buttonColors(Color.White),
                 shape = RoundedCornerShape(5.dp),
                 elevation = ButtonDefaults.elevatedButtonElevation(8.dp)
@@ -215,26 +188,15 @@ fun Login(navController: NavController) {
             when (event) {
                 is MainViewModel.ValidationEvent.Success -> {
 
-                    val usuario = cadastroRepository.buscarUsuario(userState)
-
-                    if(usuario == null){
-                        Toast.makeText(context, "Usuário não encontrado", Toast.LENGTH_LONG).show()
-                    } else if(usuario != null) {
-                        if(senhaState == usuario.senha){
+                    loginSuccess?.let {
+                        if (it) {
                             navController.navigate("entrada")
                         } else {
-                            Toast.makeText(context, "Senha não confere", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, "Senha ou usuário incorretos", Toast.LENGTH_LONG).show()
                         }
                     }
                 }
             }
         }
     }
-}
-
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-private fun LoginScreenPV() {
-    val navController = rememberNavController()
-    Login(navController = navController)
 }
