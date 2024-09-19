@@ -1,5 +1,6 @@
 package br.com.fiap.locamail.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +34,7 @@ import androidx.navigation.NavController
 import br.com.fiap.locamail.R
 import br.com.fiap.locamail.presentation.SearchViewModel
 import kotlinx.coroutines.launch
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -43,7 +46,7 @@ fun BuscaScreen(viewModel: SearchViewModel, navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color.White),
+            .background(color = MaterialTheme.colorScheme.background),
     ) {
         Row(
             modifier = Modifier
@@ -83,7 +86,7 @@ fun BuscaScreen(viewModel: SearchViewModel, navController: NavController) {
                         .size(30.dp)
                         .padding(top = 10.dp, start = 10.dp)
                         .clickable {
-                                   coroutineScope.launch { viewModel.searchEmails(searchQuery) }
+                            coroutineScope.launch { viewModel.searchEmails(searchQuery) }
                         },
                     tint = colorResource(id = R.color.preto_locaweb)
                 )
@@ -91,20 +94,24 @@ fun BuscaScreen(viewModel: SearchViewModel, navController: NavController) {
         }
 
         val emailList by viewModel.emailList.observeAsState(emptyList())
-        LazyColumn(modifier = Modifier.padding(start = 5.dp, end = 5.dp)) {
-            items(emailList)  { item ->
-                val nome = item.remetente
+        Log.i("lista", "BuscaScreen:${emailList} ")
+        LazyColumn {
+            items(emailList.size) { index ->
+                val email = emailList[index]
 
-                val horarioCompleto = item.horario
-                val horario = horarioCompleto.format(DateTimeFormatter.ofPattern("dd-MM-yyyy - HH:mm"))
-
-                val titulo = item.titulo
-                val previa = item.conteudo
-                val foto = item.fotoRemetente
-                val conteudo = item.conteudo
-                val emailId = item.emailId.toString()
-
-                //CardEmail(nome, horario!!, titulo, previa, conteudo, foto!!, emailId, navController, emailList)
+                val parsedDate = ZonedDateTime.parse(email.horario)
+                val formattedHorario = parsedDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy - HH:mm"))
+                CardEmail(
+                    nome = email.destinatario[0],
+                    horario = formattedHorario,
+                    titulo = email.titulo,
+                    previa = email.conteudo.take(50),
+                    conteudo = email.conteudo,
+                    foto = email.fotoRemetente!!,
+                    emailId = email.emailId,
+                    navController = navController,
+                    listaEmails = emailList
+                )
             }
         }
     }

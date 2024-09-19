@@ -53,7 +53,6 @@ fun Header(
         Text(
             text = nomeCaixa,
             fontSize = 30.sp,
-            color = colorResource(id = R.color.preto_locaweb),
             fontFamily = SfPro
         )
         Image(

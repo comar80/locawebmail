@@ -23,6 +23,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -93,7 +94,7 @@ fun EmailScreen(navController: NavController, onCalendarIconClick: () -> Unit, t
     Box {
         Column(modifier = Modifier
             .fillMaxSize()
-            .background(color = Color.White),
+            .background(color = MaterialTheme.colorScheme.background),
             verticalArrangement = Arrangement.SpaceBetween
             ) {
             Row(modifier = Modifier

@@ -4,6 +4,8 @@ import android.util.Log
 import br.com.fiap.locamail.data.model.Email
 import br.com.fiap.locamail.data.model.EmailCreate
 import br.com.fiap.locamail.data.network.ApiService
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -11,9 +13,14 @@ import retrofit2.Response
 
 class EmailApiRepository(private val apiService: ApiService) {
 
+    suspend fun getEmailsFromApi(): Response<List<Email>> {
+        return withContext(Dispatchers.IO) {
+            apiService.getEmails().execute()
+        }
+    }
+
     fun moverEmail(caixaEmailId: String, emailId: String): Call<Void> {
         val existingEmail = getEmailByIdSync(emailId)
-        Log.i("moverEmail", "moverEmail: ${existingEmail}")
         val updatedEmail = existingEmail.copy(caixaEmailId = caixaEmailId)
         return apiService.moverEmail(emailId, updatedEmail)
     }

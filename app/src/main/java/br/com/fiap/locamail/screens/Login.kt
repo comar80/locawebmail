@@ -1,5 +1,6 @@
 package br.com.fiap.locamail.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -44,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import br.com.fiap.locamail.MainActivity
 import br.com.fiap.locamail.presentation.LoginFormEvent
 import br.com.fiap.locamail.presentation.MainViewModel
 import br.com.fiap.locamail.R
@@ -64,11 +66,11 @@ fun Login(navController: NavController) {
 
     val viewModel = viewModel<MainViewModel>()
     val state = viewModel.state
-    val context = LocalContext.current
-    val cadastroRepository = CadastroRepository(context)
+    val context = LocalContext.current as MainActivity
 
     val userApiRepository = UserApiRepository(apiService = RetrofitClient.getApiService())
     val coroutineScope = rememberCoroutineScope()
+
 
     Column(
         modifier = Modifier
@@ -158,18 +160,17 @@ fun Login(navController: NavController) {
             Button(
                 onClick = {
                     viewModel.onLoginEvent(LoginFormEvent.Submit)
-                    isLoading = true
                     coroutineScope.launch {
-                        userApiRepository.loginUser(userState, senhaState,
-                            onLoginSuccess = {
-                                loginSuccess = true
-                                isLoading = false
-                                // Trigger the navigation or any post-login logic here
+                        userApiRepository.loginUser(userState, senhaState, activity = context,
+                            onLoginSuccess = { loginResponse, userGet ->
+                                loginResponse?.let {
+                                    loginSuccess = true
+                                }
+
                                 navController.navigate("entrada")
                             },
                             onLoginFailure = {
                                 loginSuccess = false
-                                isLoading = false
                                 Toast.makeText(context, "Senha ou usuário incorretos", Toast.LENGTH_LONG).show()
                             }
                         )
