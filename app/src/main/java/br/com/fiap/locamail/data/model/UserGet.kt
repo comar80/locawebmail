@@ -5,7 +5,6 @@ data class UserGet(
     var id: String,
     var name: String,
     var lastName: String,
-    var username: String,
-    var password: String,
+    var userName: String,
     var tema_escuro: Boolean
 )

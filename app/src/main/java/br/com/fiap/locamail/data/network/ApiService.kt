@@ -40,10 +40,10 @@ interface ApiService {
     @POST("auth/login")
     fun loginUser(@Body loginRequest: LoginRequest): Call<LoginResponse>
 
-    @GET("api/user/username/{userName}")
+    @GET("api/user/update-tema/{userName}")
     fun getUserByUserName(@Path("userName") userName: String): Call<UserGet>
 
-    @PATCH("api/user/update/{id}")
+    @PUT("api/user/update-tema/{id}")
     fun updateUserTema(
         @Path("id") userId: String,
         @Body updatedUser: UserUpdate
