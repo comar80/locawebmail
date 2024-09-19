@@ -5,9 +5,12 @@ import br.com.fiap.locamail.data.model.EmailCreate
 import br.com.fiap.locamail.data.model.LoginRequest
 import br.com.fiap.locamail.data.model.LoginResponse
 import br.com.fiap.locamail.data.model.UserCreate
+import br.com.fiap.locamail.data.model.UserGet
+import br.com.fiap.locamail.data.model.UserUpdate
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -36,4 +39,13 @@ interface ApiService {
 
     @POST("auth/login")
     fun loginUser(@Body loginRequest: LoginRequest): Call<LoginResponse>
+
+    @GET("api/user/username/{userName}")
+    fun getUserByUserName(@Path("userName") userName: String): Call<UserGet>
+
+    @PATCH("api/user/update/{id}")
+    fun updateUserTema(
+        @Path("id") userId: String,
+        @Body updatedUser: UserUpdate
+    ): Call<Void>
 }

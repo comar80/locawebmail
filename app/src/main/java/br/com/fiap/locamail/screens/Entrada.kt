@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
@@ -84,7 +85,7 @@ fun EntradaScreen(navController: NavController, context: Context, isDarkMode: Bo
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = Color.White),
+                    .background(color = MaterialTheme.colorScheme.background),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Header(onNavigationIconClick = {

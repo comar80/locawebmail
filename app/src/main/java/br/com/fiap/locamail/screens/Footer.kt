@@ -46,7 +46,6 @@ fun Footer(navController: NavController) {
             )
             Text(
                 text = "Email",
-                color = colorResource(id = R.color.preto_locaweb),
                 fontFamily = SfPro
             )
         }
@@ -60,7 +59,6 @@ fun Footer(navController: NavController) {
             )
             Text(
                 text = "Escrever",
-                color = colorResource(id = R.color.preto_locaweb),
                 fontFamily = SfPro
             )
         }
@@ -74,7 +72,6 @@ fun Footer(navController: NavController) {
             )
             Text(
                 text = "Buscar",
-                color = colorResource(id = R.color.preto_locaweb),
                 fontFamily = SfPro
             )
         }

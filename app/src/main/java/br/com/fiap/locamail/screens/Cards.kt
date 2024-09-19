@@ -42,12 +42,11 @@ fun CardEmail(nome: String, horario: String, titulo: String, previa: String, con
                     .fillMaxWidth()
                     .padding(start = 10.dp, end = 10.dp),
                     horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(text = nome, color = colorResource(id = R.color.preto_locaweb))
-                    Text(text = horario, color = colorResource(id = R.color.preto_locaweb))
+                    Text(text = nome)
+                    Text(text = horario)
                 }
                 Text(text = titulo,
                     modifier = Modifier.padding(start = 10.dp),
-                    color = colorResource(id = R.color.preto_locaweb),
                     fontFamily = SfPro
                 )
 
@@ -55,7 +54,6 @@ fun CardEmail(nome: String, horario: String, titulo: String, previa: String, con
                     modifier = Modifier
                         .padding(start = 10.dp)
                         .heightIn(max = 30.dp),
-                    color = colorResource(id = R.color.preto_locaweb),
                     fontFamily = SfPro
                 )
             }

@@ -28,11 +28,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import br.com.fiap.locamail.R
+import br.com.fiap.locamail.data.network.UserSession
 import br.com.fiap.locamail.model.MenuItem
 import kotlinx.coroutines.launch
 
 @Composable
 fun MenuLateral(navController: NavController, isDarkMode: Boolean, onThemeChange: (Boolean) -> Unit) {
+
+    val userName = UserSession.userName ?: return
 
     val tamanhoIcone = Modifier
         .size(35.dp)
@@ -118,7 +121,14 @@ fun MenuLateral(navController: NavController, isDarkMode: Boolean, onThemeChange
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        SwitchTheme(isDarkMode, onThemeChange)
+        SwitchTheme(
+            isDarkMode = isDarkMode,
+            userName = userName,
+            onThemeChange = { newDarkModeValue ->
+                UserSession.isDarkMode = newDarkModeValue
+                onThemeChange(newDarkModeValue) // Propagate the change
+            }
+        )
 
     }
 

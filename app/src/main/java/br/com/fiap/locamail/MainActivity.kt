@@ -3,6 +3,7 @@ package br.com.fiap.locamail
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,15 +33,15 @@ import br.com.fiap.locamail.screens.ResponderScreen
 import br.com.fiap.locamail.ui.theme.LocaMailTheme
 
 class MainActivity : ComponentActivity() {
+
+    var isDarkMode by mutableStateOf(false)
+        private set
     @SuppressLint("SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
-            var isDarkMode by remember {
-                mutableStateOf(false)
-            }
             LocaMailTheme(darkTheme = isDarkMode) {
+                Log.i("dark", "MainActivity ${isDarkMode}")
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -87,7 +88,7 @@ class MainActivity : ComponentActivity() {
                         } }
                         composable(route = "escrever") { EscreverScreen(navController) }
                         composable(route = "buscar") {
-                            val mockViewModel = SearchViewModel(baseContext)
+                            val mockViewModel = SearchViewModel()
                             BuscaScreen(viewModel = mockViewModel, navController)
                         }
 
@@ -113,4 +114,10 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    fun updateDarkMode(isDarkModeEnabled: Boolean) {
+        isDarkMode = isDarkModeEnabled
+        Log.d("MainActivity", "Dark mode state updated to: $isDarkModeEnabled")
+    }
+
 }
